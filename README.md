@@ -15,8 +15,6 @@ Contents
 8.   [BRAKER2: identifying and predicting genes with RNA-Seq data](#8-braker2-identifying-and-predicting-genes-with-rna-seq-data)  
 9.   [gFACs](#9-gfacs)  
 10.  [Functional annotation using EnTap](#10-functional-annotation-using-entap) 
-11.  []()
-12.  []()
 13.  [Gene prediction using maker](#13-gene-prediction-using-maker) 
 
 
@@ -572,11 +570,7 @@ The complete slurm scrip is called [10_exonerate.sh](10_exonerate/10_exonerate.s
 │   ├── arabidopsis_1.exon.gff
 .   .
 │   ├── arabidopsis_100.exon.gff
-```
-
-## 11. gmap
-
-## 12. gmap exonerate
+```  
 
 ## 13. Gene prediction using maker
 This step is an iterative process and to do this maker you will need to modify the maker control files for the first round of gene prediction. These files can be generated using maker using
