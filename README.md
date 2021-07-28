@@ -30,7 +30,7 @@ Besides our RNA-Seq reads, the only other data required for our annotation is th
 
 Now, we must download our RNA-Seq using the SRA-toolkit. We will be running this command as a slurm scheduler script. For more information, please visit the link provided. 
 
-It is important to know the layout of your SRA reads. For us, we are using paired-end reads. In future steps, we will want to be able to have two files, right-hand and left-hand, for each read which we can instruct our software to treat as paired. However, the SRA reads are compiled into a single file! To subvert this, we use the "--split-files" option of the sratoolkit to save each read in two separate files corresponding to the left-hand and right-hand reads. 
+It is important to know the layout of your SRA reads. For us, we are using paired-end reads. In future steps, we will want to be able to have two files, right-hand and left-hand, for each read which we can instruct our software to treat as paired. However, the SRA reads are compiled into a single file! To subvert this, we use the "--split-files" option of the sratoolkit to save each read in two separate files corresponding to the left-hand and right-hand reads. In here we will be accessing RNA seq data from WT Arabidopsis thaliana leaves, where total number of reads per library will be around 20M-22M, which is in acceptable range for RNA Seq and for annotation (around 15M).
 
 ```
 module load sratoolkit
@@ -49,6 +49,12 @@ Once the data is downloaded the folder will have the following files:
 ├── SRR6852086_1.fastq
 └── SRR6852086_2.fastq
 ```
+You can check the number of reads in a fastq file using the following awk command:
+```
+awk '{s++}END{print s/4}' SRR6852085_1.fastq
+```
+As each fastq file contains 4 lines per each read, you will need to divide the total number of counts you get, by that number, which will give you the number of reads in the sample.  
+
 
 ## 3. Quality control of reads
 We also want to trim our files to only take high-quality reads. We use the program sickle to trim our files. For information on sickle and its options, you may visit the paired-end reference section of the github provided prior. 
