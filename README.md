@@ -269,6 +269,7 @@ GGGTTGGTTTATCTCAAGAATCTTATTAATTGTTTGGACTGTTTATGTTT
 GGACATTTATTGTCATTCTTACTCCTTTGTGGAAATGTTTGTTCTATCAA
 ```
 RepeatMasker produces masking stats and other relevant output files, lets have a look at few of them.
+
 **Athaliana_167_TAIR9.fa.tbl** have summary stats showing % of genome masked and the repeat elements that were used in the masking and there individual contribution in masking.
 ```
 >head -12 Athaliana_167_TAIR9.fa.tbl
