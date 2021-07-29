@@ -338,6 +338,10 @@ Gap_init rate = 0.06 (2 / 34), avg. gap size = 1.00 (2 / 2)
 
 
 ## 6. Mapping RNA-Seq reads with HISAT2
+_**Purpose of mapping RNAseq reads.**_
+
+_We will be using **BRAKER** workflow for gene prediction in our genome. [BRAKER](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6635606/) works on two tools GeneMark-ES/ET and AUGUSTUS. AUGUSTUS has large number of parameters that are species specific, hence a training step for parameter optimization is required.  In order to estimate optimal parameters for AUGUSTUS, it must be trained on expert curated set of gene structures as part of supervised learning. The curated gene structure may not be available for all the species and it could hinder use of AUGUSTUS. On the other hand GeneMark-ES/ET can generate these parameters by unsupervised trainning but presence of external evidence of Exon-intron boundries (like RNAseq data) can greatly enhance its performance. In essence GeneMark-ES/ET is trained (using extrinsic data like RNAseq) and predicts a first gene set. This gene set is filtered. AUGUSTUS is trained on the filtered gene set. In order to use the RNAseq data we have to map it to assembled genome and the resulting alignment file will be used in downstream BRAKER pipeleine_
+
 We will now be mapping our RNA-Seq reads to the masked genome using HISAT2. Before aligning our reads, we need to build an index of our masked genome.
 
 ```
