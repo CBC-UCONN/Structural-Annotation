@@ -106,25 +106,32 @@ This will result in trimmed reads:
 
 ## 4. Identifying Regions of Genomic Repetition with RepeatModeler
 A significant proportion of any eukaryotic genome is low complexity regions, often consisting of [repetitive elements](https://en.wikipedia.org/wiki/Repeated_sequence_(DNA)). Marking the presence of these repeats is an important part of structural annotation of genomic sequence. A good fraction of these repeats are associated with Transposable elements (TE) also known as mobile elements. TE are biologically important as they are proposed to have role in [genome evolution](https://pubmed.ncbi.nlm.nih.gov/15016989/) , [genomic rearrangement](https://pubmed.ncbi.nlm.nih.gov/15020798/) and modulation of gene expression. On the flip side, repeats can negatively affect the alignment when present flanking a genomic-region of interest. As part of genome annotation process we have to identify and annotate these repeats in our genome.  As these repeats can negatively affect gene predictions and evolutionary studies it demands that we mask them.  The masking of a sequence in genome is of 2 types, 
-(1) Hard-Masking where the the sequence is replaced by Ns.  Example the repeat sequence TGCAAATCGCA (terminal inverted repeat sequence  of Class 2 TE's) is hard masked in the sequence below
+
+(1) **Hard-Masking** where the the sequence is replaced by Ns.  Example the repeat sequence TGCAAATCGCA (terminal inverted repeat sequence  of Class 2 TE's) is hard masked in the sequence below
 
 `CTGTGCAAATCGCAGTTA -> CTGNNNNNNNNNNNGTTA `
 
-(2) Soft-masking, this involves converting the sequence from Uppercase to lowercase as an examle the same repeat sequence is soft masked below
+(2) **Soft-masking** , this involves converting the sequence from Uppercase to lowercase as an examle the same repeat sequence is soft masked below
 
 `CTGTGCAAATCGCAGTTA -> CTGtgcaaatcgcagTTA `
 
 As it is fairly obvious that removal or hard masking of repeats is loss of sequence information as compared to soft masking and hence later is the preffered mode of masking in genome annotation process. The masking is a 2 fold process, one identification of repeats and secondly masking them.
-Software used in identification of repeats can be categorised as extrensic and intrinsic tools. 
-Extrinsic tools, e.g. [RepeatMasker](https://www.repeatmasker.org/), uses the repeat sequence (from a closely related species) listed in Repbase (a repeat database) and annotate there presence in our assembled genome.
-Intrinsic tool, e.g. [RepeatModeler](http://www.repeatmasker.org/RepeatModeler/), perform a de novo identification and modelling of TE families. 
+Software used in identification of repeats can be categorised as extrensic and intrinsic tools.
+
+**Extrinsic tools**, e.g. [RepeatMasker](https://www.repeatmasker.org/), uses the repeat sequence (from a closely related species) listed in Repbase (a repeat database) and annotate there presence in our assembled genome.
+
+**Intrinsic tool**, e.g. [RepeatModeler](http://www.repeatmasker.org/RepeatModeler/), perform a de novo identification and modelling of TE families. 
+
 ### RepeatModeler
 It relies on three de-novo repeat finding programs ( RECON, RepeatScout and LTRHarvest/LTR_retriever ) which employ complementary computational methods for identifying repeat element boundaries and family relationships from sequence data. A brief description each of the programme is given below
+
 **RECON** can carry out denovo identification and classification of repeat sequence families. In order to achieve that it first perform pairwise alignment between the genomic sequences and then it cluster the sequences using single linkage cluster (agglomerative clustering) approach. It then uses the multiple alignment information to define boundaries of repeats and also to distinguish homologous but distinct repeat element families.
+
 **RepeatScout** first create a frequency table of l-mers (l=ceil(log_4(L)+1), where L length of input sequence) then it creates a fasta file of all the repetitive elements. It then run 2 rounds of filtering on the repeat elements ("filter-stage-1.prl" and "filter-stage-2.prl"), in the first round it removes low complexity tandem repeats from the fasta file following that the frequency of repeats in fasta fasta file is estimated in the genome using RepeatMasker. In second round of filtering, repeats appearing less than certain number of times (default 10) are removed.
+
 **LTRHarvest/LTR_retriever** perform de novo detection of full length LTR retrotransposons in large sequence sets. LTRharvest efficiently delivers high quality annotations based on known LTR transposon features like length, distance, and sequence motifs. LTR_retriever carry out accurate identification of LTR retrotransposons (LTR-RTs) from output of LTRharvest and generates non-redundant LTR-RT library for genome annotations.
-Typically both Intrinsic and Extrinsic tools are used to annotate and mask the repaets of a genome and thats what we will be doing here. We will perform Repeatmodeller first to identify novel motifs and then using RepeatMasker we will softmask repeats in the genome using sequences of novel repeats and reference repeats (from Repbase). 
-Before we identify our repeat regions, we must first compile our database using the "BuildDatabase" command of RepeatModeler. This will format the FASTA files for use with RepeatModeler.
+
+Typically both Intrinsic and Extrinsic tools are used to annotate and mask the repaets of a genome and thats what we will be doing here. We will perform Repeatmodeller first to identify novel motifs and then using RepeatMasker we will softmask repeats in the genome using sequences of novel repeats and reference repeats (from Repbase).  Before we identify our repeat regions, we must first compile our database using the "BuildDatabase" command of RepeatModeler. This will format the FASTA files for use with RepeatModeler.
 ```
 module load RepeatModeler/2.01
 BuildDatabase -name "athaliana_db"  Athaliana_167_TAIR9.fa
@@ -290,7 +297,7 @@ SINEs:                0            0 bp    0.00 %
     16    9.3  0.0  0.0  Chr1          5680     5702 (30421969) + (T)n               Simple_repeat       1     23     (0)     6
     36    0.0  0.0  0.0  Chr1          8669     8699 (30418972) + (CT)n              Simple_repeat       1     31     (0)     7
 ```
-***Athaliana_167_TAIR9.fa.out.gff* provides the masking information in a gff format. The columns are , chromosome, software used to annotate the feature (here RepeatMaasker), Feature type, Start and End of feature, Score, Strand and last column shows additional atributes assosiated with the feature.
+***Athaliana_167_TAIR9.fa.out.gff** provides the masking information in a gff format. The columns are , chromosome, software used to annotate the feature (here RepeatMaasker), Feature type, Start and End of feature, Score, Strand and last column shows additional atributes assosiated with the feature.
 ```
 ##gff-version 2
 ##date 2021-07-27
