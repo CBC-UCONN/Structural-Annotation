@@ -518,6 +518,30 @@ braker
 ├── species
 └── what-to-cite.txt
 ```
+BRAKER produces several important output files in the working directory.
+```
+augustus.hints.gtf: Genes predicted by AUGUSTUS with hints from given extrinsic evidence. This file will be missing if BRAKER was run with the option --esmode.
+
+augustus.hints_utr.gtf: This file may contain different contents depending on how you called BRAKER:
+
+If you ran BRAKER with --UTR=on, then this file will contain genes predicted by AUGUSTUS with UTR parameters and coverage information from RNA-Seq data in GTF format.
+
+If you ran BRAKER with --addUTR=on, then this file will contain genes predicted by AUGUSTUS without UTR parameters and without coverage information from RNA-Seq data. Instead, AUGUSTUS gene predictions with hints will only be extended by UTRs if RNA-Seq coverage allows it (i.e. no separate AUGUSTUS training or run was performed, UTRs are only added from running GUSHR). Genes in are in GTF format.
+
+This file will only be present if BRAKER was executed with the options --UTR=on or --addUTR=on and a RNA-Seq BAM file.
+
+augustus.ab_initio.gtf: Genes predicted by AUGUSTUS in ab initio mode in GTF-format. The file will always be present if AUGUSTUS has been run with the option --esmode. Otherwise, it will only be present if BRAKER was run with the option --AUGUSTUS_ab_initio.
+
+augustus.ab_initio_utr.gtf: This file may contain gene predictions with UTRs if you ran BRAKER with --UTR=on.
+
+This file will only be present if BRAKER was executed with the options --UTR=on or --addUTR=on and a RNA-Seq BAM-file, and with the option --AUGUSTUS_ab_initio.
+
+GeneMark-E*/genemark.gtf: Genes predicted by GeneMark-ES/ET/EP/EP+ in GTF-format. This file will be missing if BRAKER was executed with proteins of close homology and the option --trainFromGth.
+
+braker.gtf: Union of augustus.hints.gtf and reliable GeneMark-EX predictions (genes fully supported by external evidence). In --esmode, this is the union of augustus.ab_initio.gtf and all GeneMark-ES genes. Thus, this set is generally more sensitive (more genes correctly predicted) and can be less specific (more false-positive predictions can be present).
+
+hintsfile.gff: The extrinsic evidence data extracted from RNAseq.bam and/or protein data.
+```
 
 ## 9. gFACs 
 In here we are using [gFACs](https://gitlab.com/PlantGenomicsLab/gFACs) to extract viable genes and proteins
