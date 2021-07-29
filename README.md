@@ -107,9 +107,13 @@ This will result in trimmed reads:
 ## 4. Identifying Regions of Genomic Repetition with RepeatModeler
 A significant proportion of any eukaryotic genome is low complexity regions, often consisting of [repetitive elements](https://en.wikipedia.org/wiki/Repeated_sequence_(DNA)). Marking the presence of these repeats is an important part of structural annotation of genomic sequence. A good fraction of these repeats are associated with Transposable elements (TE) also known as mobile elements. TE are biologically important as they are proposed to have role in [genome evolution](https://pubmed.ncbi.nlm.nih.gov/15016989/) , [genomic rearrangement](https://pubmed.ncbi.nlm.nih.gov/15020798/) and modulation of gene expression. On the flip side, repeats can negatively affect the alignment when present flanking a genomic-region of interest. As part of genome annotation process we have to identify and annotate these repeats in our genome.  As these repeats can negatively affect gene predictions and evolutionary studies it demands that we mask them.  The masking of a sequence in genome is of 2 types, 
 (1) Hard-Masking where the the sequence is replaced by Ns.  Example the repeat sequence TGCAAATCGCA (terminal inverted repeat sequence  of Class 2 TE's) is hard masked in the sequence below
+
 `CTGTGCAAATCGCAGTTA -> CTGNNNNNNNNNNNGTTA `
+
 (2) Soft-masking, this involves converting the sequence from Uppercase to lowercase as an examle the same repeat sequence is soft masked below
+
 `CTGTGCAAATCGCAGTTA -> CTGtgcaaatcgcagTTA `
+
 As it is fairly obvious that removal or hard masking of repeats is loss of sequence information as compared to soft masking and hence later is the preffered mode of masking in genome annotation process. The masking is a 2 fold process, one identification of repeats and secondly masking them.
 Software used in identification of repeats can be categorised as extrensic and intrinsic tools. 
 Extrinsic tools, e.g. [RepeatMasker](https://www.repeatmasker.org/), uses the repeat sequence (from a closely related species) listed in Repbase (a repeat database) and annotate there presence in our assembled genome.
