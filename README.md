@@ -115,7 +115,7 @@ A significant proportion of any eukaryotic genome is low complexity regions, oft
 
 `CTGTGCAAATCGCAGTTA -> CTGtgcaaatcgcagTTA `
 
-As it is fairly obvious that removal or hard masking of repeats is loss of sequence information as compared to soft masking and hence later is the preffered mode of masking in genome annotation process. The masking is a 2 fold process, one identification of repeats and secondly masking them.
+It is fairly obvious that hard masking or removal of repeats is loss of sequence information as compared to soft masking and hence later is the preferred mode of masking a genome in an annotation process. The masking is a 2 fold process, one identification of repeats and secondly masking them.
 Software used in identification of repeats can be categorised as extrensic and intrinsic tools.
 
 **Extrinsic tools**, e.g. [RepeatMasker](https://www.repeatmasker.org/), uses the repeat sequence (from a closely related species) listed in Repbase (a repeat database) and annotate there presence in our assembled genome.
