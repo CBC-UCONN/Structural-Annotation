@@ -298,7 +298,7 @@ SINEs:                0            0 bp    0.00 %
     16    9.3  0.0  0.0  Chr1          5680     5702 (30421969) + (T)n               Simple_repeat       1     23     (0)     6
     36    0.0  0.0  0.0  Chr1          8669     8699 (30418972) + (CT)n              Simple_repeat       1     31     (0)     7
 ```
-***Athaliana_167_TAIR9.fa.out.gff** provides the masking information in a gff format. The columns are , chromosome, software used to annotate the feature (here RepeatMaasker), Feature type, Start and End of feature, Score, Strand and last column shows additional atributes assosiated with the feature.
+***Athaliana_167_TAIR9.fa.out.gff** provides the masking information in a gff format. The columns are , chromosome, software used to annotate the feature (here RepeatMaasker), Feature type, Start and End of feature, Score, Strand and last column shows additional attributes assosiated with the feature.
 ```
 ##gff-version 2
 ##date 2021-07-27
