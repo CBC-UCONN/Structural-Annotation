@@ -668,6 +668,39 @@ This will produce the mono exonic gene stats and multi exonic gene stats.
     └── statistics.txt
 ```
 
+### Busco evaluation   
+We will evaluate the mono and multi outputs of the gfacts using busco.   
+```
+busco -i mono_o/genes.fasta.faa \
+        -o busco_mono \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
+```
+The complete slurm script is [busco_mono.sh](08_gFACs/busco_mono.sh).
+Where it will give:   
+```
+C:5.6%[S:4.7%,D:0.9%],F:0.2%,M:94.2%,n:425
+```
+
+
+
+evaluation of the multi exonic regions:
+```
+busco -i multi_o/genes.fasta.faa \
+        -o busco_multi \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
+```  
+The complete script is [busco_multi.sh](08_gFACs/busco_multi.sh).
+
+Where it will give:  
+```
+C:93.2%[S:92.0%,D:1.2%],F:0.7%,M:6.1%,n:425
+```
+
+
+
+
 
 ## 10. Functional annotation using EnTap
 In this step we will use the gene fasta sequences we got from the previous step as input sequences.
@@ -685,6 +718,7 @@ The complete slurm script is called [09_entap.sh](09_entap/09_entap.sh).
 
 The out put will be writen in the the *entap_outfiles/* folder, and more information on EnTAP can be found in [EnTAP documentation](https://entap.readthedocs.io/en/v0.9.0-beta/index.html), which has a very comprehensive description.
 
+![](images/busco_gfacts.png)
 
 
 
