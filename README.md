@@ -217,7 +217,9 @@ Per the RepeatModeler [webpage](http://www.repeatmasker.org/RepeatModeler/), we 
            ..
           round-n/
 ```
-We see that we have information about the genomic sample used in each round, a consensus seqeuence frequency matrix for the genomic sample, the generated predicted consensus sequences, and visualizations. This format is repeated for various rounds with summaries of all rounds compiled in the summary directories. Our complete, predicted consensus sequences may be found in the various "consensi" fastas. Now that we have generated our consensus sequences, we are ready to mask our genome using the RepeatMasker.
+We see that we have information about the genomic sample used in each round, a consensus seqeuence frequency matrix for the genomic sample, the generated predicted consensus sequences, and visualizations. This format is repeated for various rounds with summaries of all rounds compiled in the summary directories. Our complete, predicted consensus sequences may be found in the various "consensi" fastas. Now that we have generated our consensus sequences, we are ready to mask our genome using the RepeatMasker.  
+
+
 ## 5. Masking Regions of Genomic Repetition with RepeatMasker
 Now that we have identified our consensus sequences, we are ready to mask them using the RepeatMasker. RepeatMasker requires two arguments, a library of repetitive regions for your organism and the genome fasta for your organism. RepeatMasker will align the repetitive regions to your genome followed by masking those repetitive regions within your genome appropriately. Let's have a look at the RepeatMasker options:
 ```
@@ -335,6 +337,51 @@ Matrix = Unknown
 Transitions / transversions = 1.00 (1/0)
 Gap_init rate = 0.06 (2 / 34), avg. gap size = 1.00 (2 / 2)
 ```
+
+### Evaluating using BUSCO  
+In here we will evalute the assemblies using BUSCO.  
+```
+busco -i Athaliana_167_TAIR9.fa.masked \
+        -o masked_genome \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m genome
+```  
+
+**NOTE**: When running busco you need to copy the augustus config directory to a location which you have the permision to write to and the path to the augustus config directory should be exported beforehand.  
+
+General useage of the command: 
+```
+usage: busco -i [SEQUENCE_FILE] -l [LINEAGE] -o [OUTPUT_NAME] -m [MODE] [OTHER OPTIONS] 
+``` 
+
+The command options we will be using: 
+```
+-i FASTA FILE   Input sequence file in FASTA format
+-l LINEAGE      Specify the name of the BUSCO lineage
+-o OUTPUT       Output folders and files will be labelled with this name
+-m MODE         BUSCO analysis mode
+					- geno or genome, for genome assemblies (DNA)
+					- tran or transcriptome, for transcriptome assemblies (DNA)
+					- prot or proteins, for annotated gene sets (protein)
+```
+The complete BUSCO scrip is called [04b_busco.sh](04_repeatmasker/04b_busco.sh).  
+
+Summary of the inital assembly assesment using BUSCO:  
+```
+        --------------------------------------------------
+        |Results from dataset viridiplantae_odb10         |
+        --------------------------------------------------
+        |C:99.3%[S:98.6%,D:0.7%],F:0.0%,M:0.7%,n:425      |
+        |422    Complete BUSCOs (C)                       |
+        |419    Complete and single-copy BUSCOs (S)       |
+        |3      Complete and duplicated BUSCOs (D)        |
+        |0      Fragmented BUSCOs (F)                     |
+        |3      Missing BUSCOs (M)                        |
+        |425    Total BUSCO groups searched               |
+        --------------------------------------------------
+```   
+
+
 
 
 ## 6. Mapping RNA-Seq reads with HISAT2
@@ -531,7 +578,33 @@ GeneMark-E*/genemark.gtf: Genes predicted by GeneMark-ES/ET/EP/EP+ in GTF-format
 braker.gtf: Union of augustus.hints.gtf and reliable GeneMark-EX predictions (genes fully supported by external evidence). In --esmode, this is the union of augustus.ab_initio.gtf and all GeneMark-ES genes. Thus, this set is generally more sensitive (more genes correctly predicted) and can be less specific (more false-positive predictions can be present).
 
 hintsfile.gff: The extrinsic evidence data extracted from RNAseq.bam and/or protein data.
+```  
+
+### BUSCO evaluation   
+In here we will evalute the assemblies using BUSCO.    
 ```
+busco -i ./braker/augustus.hints.aa \
+        -o braker_aa \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
+```  
+The complete slurm scrip is called [busco.sh](07_braker/busco.sh). Summary of the inital assembly assesment using BUSCO:  
+
+```
+        --------------------------------------------------
+        |Results from dataset viridiplantae_odb10         |
+        --------------------------------------------------
+        |C:98.5%[S:92.9%,D:5.6%],F:0.9%,M:0.6%,n:425      |
+        |419    Complete BUSCOs (C)                       |
+        |395    Complete and single-copy BUSCOs (S)       |
+        |24     Complete and duplicated BUSCOs (D)        |
+        |4      Fragmented BUSCOs (F)                     |
+        |2      Missing BUSCOs (M)                        |
+        |425    Total BUSCO groups searched               |
+        --------------------------------------------------  
+```  
+
+
 
 ## 9. gFACs 
 In here we are using [gFACs](https://gitlab.com/PlantGenomicsLab/gFACs) to extract viable genes and proteins
@@ -546,33 +619,36 @@ if [ ! -d mono_o ]; then
 fi
 
 perl "$script" \
-	-f braker_2.1.2_gff3 \
-	--statistics \
-	--statistics-at-every-step \
-	--splice-table \
-	--unique-genes-only \
-	--rem-multiexonics \
-	--rem-all-incompletes \
-	--rem-genes-without-start-codon \
-	--rem-genes-without-stop-codon \
-	--get-protein-fasta \
-	--fasta "$genome" \
-	-O mono_o \
-	"$alignment" 
+        -f braker_2.1.2_gff3 \
+        --statistics \
+        --statistics-at-every-step \
+        --splice-table \
+        --unique-genes-only \
+        --rem-multiexonics \
+        --rem-all-incompletes \
+        --rem-genes-without-start-codon \
+        --rem-genes-without-stop-codon \
+        --min-CDS-size 300 \
+        --get-protein-fasta \
+        --fasta "$genome" \
+        -O mono_o \
+        "$alignment"
 
 perl "$script" \
-	-f braker_2.1.2_gff3 \
-	--statistics \
-	--statistics-at-every-step \
-	--splice-table \
-	--unique-genes-only \
-	--rem-monoexonics \
-	--rem-5prime-3prime-incompletes \
-	--rem-genes-without-start-and-stop-codon \
-	--min-exon-size 6 \
-	--fasta "$genome" \
-	-O multi_o \
-	"$alignment"
+        -f braker_2.1.2_gff3 \
+        --statistics \
+        --statistics-at-every-step \
+        --splice-table \
+        --unique-genes-only \
+        --rem-monoexonics \
+        --min-exon-size 6 \
+        --min-intron-size 9 \
+        --min-CDS-size 300 \
+        --get-protein-fasta \
+        --fasta "$genome" \
+        -O multi_o \
+        "$alignment"
+
 ```
 
 The complete slurm script is called [gfacts.sh](08_gFACs/gfacs.sh).
@@ -586,6 +662,7 @@ This will produce the mono exonic gene stats and multi exonic gene stats.
 │   ├── gFACs_log.txt
 │   └── statistics.txt
 └── multi_o
+    ├── genes.fasta.faa
     ├── gene_table.txt
     ├── gFACs_log.txt
     └── statistics.txt
