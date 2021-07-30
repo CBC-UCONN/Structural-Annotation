@@ -15,5 +15,6 @@ hostname
 date
 
 module load RepeatModeler/2.01
+ln -s /labs/CBC/Tutorials/structural_annotation_for_assembled_genomes/03_repeatmodeler/Athaliana_167_TAIR9.fa Athaliana_167_TAIR9.fa
 
 BuildDatabase -name "athaliana_db"  Athaliana_167_TAIR9.fa 

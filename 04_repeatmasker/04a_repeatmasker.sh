@@ -17,6 +17,8 @@ date
 sed -i 's/Chr1.*/Chr1/g; s/Chr2.*/Chr2/g; s/Chr3.*/Chr3/g; s/Chr4.*4/Chr4/g; s/Chr5.*/Chr5/g; s/ChrM.*/ChrM/g; s/ChrC.*/ChrC/g;' Athaliana_167_TAIR9.fa
 
 module load RepeatMasker/4.0.9-p2 
-RepeatMasker -pa 8 -lib ../03_repeatmodeler/RM_150489.WedMar311224002021/consensi.fa -gff -a -noisy -xsmall Athaliana_167_TAIR9.fa
+ln -s /labs/CBC/Tutorials/structural_annotation_for_assembled_genomes/03_repeatmodeler/Athaliana_167_TAIR9.fa Athaliana_167_TAIR9.fa
 
+#RepeatMasker -pa 8 -lib ../03_repeatmodeler/RM_150489.WedMar311224002021/consensi.fa -gff -a -noisy -xsmall Athaliana_167_TAIR9.fa
+RepeatMasker -pa 8 -lib ../03_repeatmodeler/RM_*/consensi.fa -gff -a -noisy -xsmall Athaliana_167_TAIR9.fa
 date

@@ -609,65 +609,7 @@ The complete slurm script is called [09_entap.sh](09_entap/09_entap.sh).
 The out put will be writen in the the *entap_outfiles/* folder, and more information on EnTAP can be found in [EnTAP documentation](https://entap.readthedocs.io/en/v0.9.0-beta/index.html), which has a very comprehensive description.
 
 
-## 11. Exonerate 
-Exonerate does not multi-thread so the best plan is to split up the protein set and then bring everything back together at the end  as a single input. So the first step is to split the protein set using the [splitfasta.py](10_exonerate/splitfasta.py) python script which was built by Daniel Monyak in Jill Wegrzyn lab. When executing the script the output directory need to be created inadvance.
 
-```
-protInPath=arabidopsis_files
-protFileName=arabidopsis_filtered.pep
-
-outdir="pieces"
-mkdir -p pieces
-
-script="splitfasta.py"
-
-num_pieces=100
-
-echo "Making pieces..."
-
-python $script \
-	--path $protInPath \
-	--fasta $protFileName \
-	--pathOut $outdir/ \
-	--pieces $num_pieces
-```
-
-The will divide the protein file into 100 pieces in the output folder:
-```
-10_exonerate/
-├── pieces/
-│   ├── arabidopsis_filtered.pep1.fa
-.   .
-│   ├── arabidopsis_filtered.pep100.fa
-```
-The full slurm scrip is called [splitfasta.sh](10_exonerate/splitfasta.sh).
-
-Then using the exonerate to annotate the genes using masked genome, where in this script we are using the array function which is in the slurm schedular. 
-```
-genome=../04_repeatmasker/Athaliana_167_TAIR9.fa.masked
-species="arabidopsis"
-
-mkdir -p gffpieces
-out=gffpieces/${species}_${SLURM_ARRAY_TASK_ID}.exon.gff
-pep=pieces/arabidopsis_filtered.pep${SLURM_ARRAY_TASK_ID}.fa
-
-
-exonerate --model protein2genome \
-	--query $pep \
-	--target $genome \
-	-n 1 --percent 95 --score 500 --minintron 50 --showalignment no \
-	--showtargetgff yes --geneseed 250 --forcegtag \
-	--hspfilter 100 --showvulgar yes --maxintron 200000 > $out
-```
-The complete slurm scrip is called [10_exonerate.sh](10_exonerate/10_exonerate.sh). 
-
-```
-10_exonerate/
-├── gffpieces
-│   ├── arabidopsis_1.exon.gff
-.   .
-│   ├── arabidopsis_100.exon.gff
-```  
 
 ## 13. Gene prediction using maker
 This step is an iterative process and to do this maker you will need to modify the maker control files for the first round of gene prediction. These files can be generated using maker using
