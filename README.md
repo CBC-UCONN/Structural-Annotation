@@ -698,7 +698,7 @@ Where it will give:
 C:93.2%[S:92.0%,D:1.2%],F:0.7%,M:6.1%,n:425
 ```
 
-
+![](images/busco_gfacts.png)
 
 
 
@@ -718,7 +718,7 @@ The complete slurm script is called [09_entap.sh](09_entap/09_entap.sh).
 
 The out put will be writen in the the *entap_outfiles/* folder, and more information on EnTAP can be found in [EnTAP documentation](https://entap.readthedocs.io/en/v0.9.0-beta/index.html), which has a very comprehensive description.
 
-![](images/busco_gfacts.png)
+
 
 
 
