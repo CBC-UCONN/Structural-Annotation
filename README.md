@@ -827,4 +827,9 @@ maker -base second_iter maker_opts.ctl maker_bopts.ctl maker_exe.ctl
 
 complete slurm script is called [maker.sh](13_maker/2_round/2_round_maker/maker.sh) 
 
+### busco evaluation   
+
+![](images/busco_marker_rounds.png)  
+
+
 
