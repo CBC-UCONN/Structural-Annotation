@@ -792,10 +792,10 @@ maker -CTL
 ```
 which will generate the following control files:
 
-*   maker_opts.ctl
-*   maker_exe.ctl
-*   maker_evm.ctl
-*   maker_bopts.ctl
+*   [maker_opts.ctl](13_maker/1_round/1_round_marker/maker_opts.ctl)
+*   [maker_exe.ctl](13_maker/1_round/1_round_marker/maker_exe.ctl)
+*   [maker_evm.ctl](13_maker/1_round/1_round_marker/maker_evm.ctl)
+*   [maker_bopts.ctl](13_maker/1_round/1_round_marker/maker_bopts.ctl)
 
 These generated control files need to be modified according to your needs.
 
