@@ -607,7 +607,56 @@ The complete slurm scrip is called [busco.sh](07_braker/busco.sh). Summary of th
 
 
 ## 9. gFACs 
-In here we are using [gFACs](https://gitlab.com/PlantGenomicsLab/gFACs) to extract viable genes and proteins
+In here we are using [gFACs](https://gitlab.com/PlantGenomicsLab/gFACs) to extract viable genes and proteins.  
+
+As the inital phase we will use gFACs with out any filters to extract the genes and proteins using the following:   
+```
+genome="../04_repeatmasker/Athaliana_167_TAIR9.fa.masked"
+alignment="../07_braker/braker/augustus.hints.gff3"
+script="/labs/Wegrzyn/gFACs/gFACs.pl"
+
+if [ ! -d general ]; then
+        mkdir general
+fi
+
+
+perl "$script" \
+        -f braker_2.1.2_gff3 \
+        --statistics \
+        --splice-table \
+        --get-protein-fasta \
+        --fasta "$genome" \
+        -O general \
+        "$alignment"
+```   
+
+The complete slurm script is [gfacs_general.sh](08a_gfacs/gfacs_general.sh). This will produce the following files:  
+```
+general/
+├── genes.fasta.faa
+├── gene_table.txt
+├── gFACs_log.txt
+└── statistics.txt
+```  
+
+### Evaluate the unfiltered predicted genes with BUSCO   
+Next we would like to evaluate the predicted genes with out filters using BUSCO.  
+
+``` 
+busco -i general/genes.fasta.faa \
+        -o busco_general \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
+```  
+
+Complete slurm script [busco.sh](08a_gfacs/busco.sh). 
+```
+C:98.3%[S:92.7%,D:5.6%],F:0.9%,M:0.8%,n:425
+```
+
+
+![](images/busco_08a_gfacs_general.png)
+
 
 ```
 genome="../04_repeatmasker/Athaliana_167_TAIR9.fa.masked"
@@ -703,18 +752,32 @@ C:93.2%[S:92.0%,D:1.2%],F:0.7%,M:6.1%,n:425
 
 
 ## 10. Functional annotation using EnTap
-In this step we will use the gene fasta sequences we got from the previous step as input sequences.
+In this step we will use the gene fasta sequences we got from the previous step as input sequences. 
+
+### mono_o  
 ```
 EnTAP --runP \
-	-i ../08_gFACs/mono_o/genes.fasta.faa \
-	-d /isg/shared/databases/Diamond/RefSeq/complete.protein.faa.205.dmnd \
-	-d /isg/shared/databases/Diamond/Uniprot/uniprot_sprot.dmnd \
-	-d /isg/shared/databases/Diamond/ntnr/nr_protein.205.dmnd \
-	--ontology 0 \
-	--threads 8 
+        -i ../../08_gFACs_NEW/mono_o/genes.fasta.faa \
+        -d /isg/shared/databases/Diamond/RefSeq/complete.protein.faa.205.dmnd \
+        -d /isg/shared/databases/Diamond/Uniprot/uniprot_sprot.dmnd \
+        --ontology 0 \
+        --threads 16
 ```
+The complete slurm script for mono exonic genes is [09_entap.sh](09_entap/mono_o/09_entap.sh).  
 
-The complete slurm script is called [09_entap.sh](09_entap/09_entap.sh).
+
+### multi_o  
+```
+EnTAP --runP \
+        -i ../../08b_gfacs/multi_o/genes.fasta.faa \
+        -d /isg/shared/databases/Diamond/RefSeq/complete.protein.faa.205.dmnd \
+        -d /isg/shared/databases/Diamond/Uniprot/uniprot_sprot.dmnd \
+        --ontology 0 \
+        --threads 16
+```  
+
+The complete slurm script for multi exonic genes is [09_entap.sh](09_entap/multi_o/09_entap.sh).  
+
 
 The out put will be writen in the the *entap_outfiles/* folder, and more information on EnTAP can be found in [EnTAP documentation](https://entap.readthedocs.io/en/v0.9.0-beta/index.html), which has a very comprehensive description.
 
@@ -722,7 +785,7 @@ The out put will be writen in the the *entap_outfiles/* folder, and more informa
 
 
 
-## 13. Gene prediction using maker
+## 11. Gene prediction using maker
 This step is an iterative process and to do this maker you will need to modify the maker control files for the first round of gene prediction. These files can be generated using maker using
 ```
 maker -CTL
@@ -831,5 +894,7 @@ complete slurm script is called [maker.sh](13_maker/2_round/2_round_maker/maker.
 
 ![](images/busco_marker_rounds.png)  
 
+
+## Long Read Annotation  
 
 
