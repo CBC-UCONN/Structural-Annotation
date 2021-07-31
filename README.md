@@ -15,7 +15,7 @@ Contents
 8.   [BRAKER2: identifying and predicting genes with RNA-Seq data](#8-braker2-identifying-and-predicting-genes-with-rna-seq-data)  
 9.   [gFACs](#9-gfacs)  
 10.  [Functional annotation using EnTap](#10-functional-annotation-using-entap) 
-13.  [Gene prediction using maker](#13-gene-prediction-using-maker) 
+11.  [Gene prediction using maker](#11-gene-prediction-using-maker) 
 
 
 ## 1.  Overview
