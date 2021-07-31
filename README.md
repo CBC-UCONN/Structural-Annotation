@@ -801,7 +801,7 @@ These generated control files need to be modified according to your needs.
 
 1.  Run 1 - first_round with maker   
 In this round you will run maker, snap and aguastus 
-     *   maker   
+     *   **maker**   
      ```
      maker -base first_iter maker_opts.ctl maker_bopts.ctl maker_exe.ctl
      ```   
@@ -814,7 +814,7 @@ In this round you will run maker, snap and aguastus
      ```  
      The complete slurm script is [marker.sh](13_maker/1_round/1_round_marker/marker.sh)
 
-     *   snap   
+     *   **snap**   
           will build a hmm using   
      ```  
      ${MAKERDIR}/maker2zff ${MAKERROUNDDIR}/first_iter.all.gff  
@@ -828,7 +828,7 @@ In this round you will run maker, snap and aguastus
      ├── first_iter.hmm  
      ```    
 
-     *    agustus  
+     *    **agustus**  
           In this step it will train the agustus using marker run outputs  
           ```  
           species=adb4.maker  
