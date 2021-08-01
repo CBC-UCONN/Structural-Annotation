@@ -919,7 +919,74 @@ Complete slurm script [busco.sh](10_maker/2_round/busco/busco.sh)
 ![](images/busco_marker_rounds.png)    
 
 
-## 
+## 12. gfacs  
+In here we are using gFACs to extract viable genes and proteins after the maker run.  
+
+```
+perl "$script" \
+        -f braker_2.1.2_gff3 \
+        --statistics \
+        --statistics-at-every-step \
+        --splice-table \
+        --unique-genes-only \
+        --rem-multiexonics \
+        --rem-all-incompletes \
+        --rem-genes-without-start-codon \
+        --rem-genes-without-stop-codon \
+        --min-CDS-size 300 \
+        --get-protein-fasta \
+        --fasta "$genome" \
+        -O mono_o \
+        "$alignment"
+
+perl "$script" \
+        -f braker_2.1.2_gff3 \
+        --statistics \
+        --statistics-at-every-step \
+        --splice-table \
+        --unique-genes-only \
+        --rem-monoexonics \
+        --min-exon-size 6 \
+        --min-intron-size 9 \
+        --min-CDS-size 300 \
+        --get-protein-fasta \
+        --fasta "$genome" \
+        -O multi_o \
+        "$alignment"
+```  
+
+The complete slurm script [gfacs.sh](11_gfacs/2_round/gfacs.sh).  
+The mono and multi exonic predicted genes will be written to the following output folders:  
+```
+mono_o/
+├── genes.fasta.faa
+├── gene_table.txt
+├── gFACs_log.txt
+└── statistics.txt
+multi_o/
+├── genes.fasta.faa
+├── gene_table.txt
+├── gFACs_log.txt
+└── statistics.txt
+```  
+
+Once the gene prediction is done busco is used to evaluate the resutls of mono and exonic results. 
+
+```
+busco -i mono_o/genes.fasta.faa \
+        -o 2_round_maker_mono \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
+
+busco -i multi_o/genes.fasta.faa \
+        -o 2_round_maker_multi \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
+```  
+The complete slurm script is [busco.sh](11_gfacs/2_round/busco.sh).  
+
+![](images/maker2_gfacs_mono-vs-multi.png)
+
 
 ## Long Read Annotation  
 
