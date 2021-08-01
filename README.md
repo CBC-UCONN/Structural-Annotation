@@ -21,7 +21,8 @@ Contents
 
 Long Read Annotation   
 14.   [Long read data download](#14-long-read-data-download)   
-15.   []
+15.   [Aligning reads using minimap2](15-aligning-the-reads-to-genome-using-minimap2)
+16.   []()
 
 
 ## 1.  Overview
@@ -1077,4 +1078,39 @@ samtools merge ${prefix}.merged.bam sorted_*.bam
 ├── arabidopsis.merged.bam
 ```  
 complete slurm script is called [samtobam.sh](14_align/samtobam.sh). 
+
+
+## 16. BRAKER  
+
+We will be using BRAKER2 for our identification and prediction of gene models using our RNA-Seq data. BRAKER2 utilizes GeneMark as the unsupervised machine learning process which produces gene models without the need for any sample data. Following this step, AUGUSTUS, a supervised machine learning process, is trained with the gene models provided by GeneMark, as well as the aligned RNA-Seq data. The symbiosis of these two processes enables for improved accuracy and sensititivy by providing a system against which it may check its own work. BRAKER requires writer privileges to the config directory. However, we cannot write in that path! To circumvent this we simply copy the AUGUSTUS executable path to our locat directory which you have write access.  
+
+```
+braker.pl --genome=${GENOME} \
+        --bam ${BAM} \
+        --softmasking 1 \
+        --gff3 \
+        --cores 16
+```  
+
+The slurm script is called [braker.sh](15_braker/braker.sh).  
+
+This will produce:
+```
+braker
+├── augustus.hints.aa
+├── augustus.hints.codingseq
+├── augustus.hints.gff3
+├── augustus.hints.gtf
+├── bam_header.map
+├── braker.gff3
+├── braker.gtf
+├── braker.log
+├── errors
+├── GeneMark-ET
+├── genemark_hintsfile.gff
+├── genome_header.map
+├── hintsfile.gff
+├── species
+└── what-to-cite.txt
+``` 
 
