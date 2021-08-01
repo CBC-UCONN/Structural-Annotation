@@ -796,10 +796,10 @@ maker -CTL
 ```
 which will generate the following control files:
 
-*   [maker_opts.ctl](13_maker/1_round/1_round_marker/maker_opts.ctl)
-*   [maker_exe.ctl](13_maker/1_round/1_round_marker/maker_exe.ctl)
-*   [maker_evm.ctl](13_maker/1_round/1_round_marker/maker_evm.ctl)
-*   [maker_bopts.ctl](13_maker/1_round/1_round_marker/maker_bopts.ctl)
+*   [maker_opts.ctl](10_maker/1_round/1_round_marker/maker_opts.ctl)
+*   [maker_exe.ctl](10_maker/1_round/1_round_marker/maker_exe.ctl)
+*   [maker_evm.ctl](10_maker/1_round/1_round_marker/maker_evm.ctl)
+*   [maker_bopts.ctl](10_maker/1_round/1_round_marker/maker_bopts.ctl)
 
 These generated control files need to be modified according to your needs.
 
@@ -816,7 +816,7 @@ In this round you will run maker, snap and aguastus
      ├── first_iter.all.maker.proteins.fasta  
      ├── first_iter.all.maker.transcripts.fasta  
      ```  
-     The complete slurm script is [marker.sh](13_maker/1_round/1_round_marker/marker.sh)
+     The complete slurm script is [marker.sh](10_maker/1_round/1_round_marker/marker.sh)
 
      *   **snap**   
           will build a hmm using   
@@ -827,7 +827,7 @@ In this round you will run maker, snap and aguastus
      forge export.ann export.dna  
      hmm-assembler.pl first_iter . > first_iter.hmm   
      ```   
-     Complete slurm scrip is [snap.sh](13_maker/1_round/1_round_snap/snap.sh) This will finally build the hmm for the first iteration:
+     Complete slurm scrip is [snap.sh](10_maker/1_round/1_round_snap/snap.sh) This will finally build the hmm for the first iteration:
      ```  
      ├── first_iter.hmm  
      ```    
@@ -875,29 +875,31 @@ In this round you will run maker, snap and aguastus
 In this round we will be using the marker derived gff3 file, snap created hmm file and the agustus gene prediction species model from the first round as input files. We will be changing the maker_opts.ctl file to include the above while keeping the others intact.  
 So in the 'maker_opts.ctl' file, in  Re-annotation Using MAKER Derived GFF3 section:
 ```
-maker_gff=/13_maker/1_round/1_round_maker/first_iter.all.gff  
+maker_gff=/10_maker/1_round/1_round_maker/first_iter.all.gff  
 ```  
 
 In the Gene prediction section we will include the hmm file generated from first found of snap  
 ```
-snaphmm=/13_maker/1_round/1_round_snap/first_iter.hmm
+snaphmm=/10_maker/1_round/1_round_snap/first_iter.hmm
 ```   
 
 In the same section we will include the gene prediction species model 
 ```
 augustus_species=adb4.maker 
 ```  
-The complete marker control files: [maker_exe.ctl](13_maker/2_round/2_round_maker/maker_exe.ctl), [maker_evm.ctl](13_maker/2_round/2_round_maker/maker_evm.ctl), [maker_bopts.ctl](13_maker/2_round/2_round_maker/maker_bopts.ctl), [maker_opts.ctl](13_maker/2_round/2_round_maker/maker_opts.ctl)  are located in the 2_round directory under 2_round_maker. Once the control files has been updated the marker can be ran using:  
+The complete marker control files: [maker_exe.ctl](10_maker/2_round/2_round_maker/maker_exe.ctl), [maker_evm.ctl](10_maker/2_round/2_round_maker/maker_evm.ctl), [maker_bopts.ctl](10_maker/2_round/2_round_maker/maker_bopts.ctl), [maker_opts.ctl](10_maker/2_round/2_round_maker/maker_opts.ctl)  are located in the 2_round directory under 2_round_maker. Once the control files has been updated the marker can be ran using:  
 ```
 maker -base second_iter maker_opts.ctl maker_bopts.ctl maker_exe.ctl
 ```  
 
-complete slurm script is called [maker.sh](13_maker/2_round/2_round_maker/maker.sh) 
+complete slurm script is called [maker.sh](10_maker/2_round/2_round_maker/maker.sh) 
 
 ### busco evaluation   
 
-![](images/busco_marker_rounds.png)  
+![](images/busco_marker_rounds.png)    
 
+
+## 
 
 ## Long Read Annotation  
 
