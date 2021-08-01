@@ -21,8 +21,9 @@ Contents
 
 Long Read Annotation   
 14.   [Long read data download](#14-long-read-data-download)   
-15.   [Aligning reads using minimap2](15-aligning-the-reads-to-genome-using-minimap2)
-16.   []()
+15.   [Aligning reads using minimap2](#15-aligning-the-reads-to-genome-using-minimap2)   
+16.   [Braker](#16-braker)   
+17.   []
 
 
 ## 1.  Overview
