@@ -15,7 +15,9 @@ Contents
 8.   [BRAKER2: identifying and predicting genes with RNA-Seq data](#8-braker2-identifying-and-predicting-genes-with-rna-seq-data)  
 9.   [gFACs](#9-gfacs)  
 10.  [Functional annotation using EnTap](#10-functional-annotation-using-entap) 
-11.  [Gene prediction using maker](#11-gene-prediction-using-maker)   
+11.  [Gene prediction using maker](#11-gene-prediction-using-maker)
+12.  [gFACs](#12-gfacs)  
+13.  [Functional annotation using EnTap](#13-functional-annotation-using-entap)   
 
 Long Read Annotation   
 12.   [Data Download]()   
@@ -985,7 +987,31 @@ busco -i multi_o/genes.fasta.faa \
 ```  
 The complete slurm script is [busco.sh](11_gfacs/2_round/busco.sh).  
 
-![](images/maker2_gfacs_mono-vs-multi.png)
+![](images/maker2_gfacs_mono-vs-multi.png)   
+
+## 13. Functional annotation using EnTap  
+In this step we will annotate the protein sequences we got from the gfacs.  
+mono:
+```
+EnTAP --runP \
+        -i ../../14_gfacs/2_round/mono_o/genes.fasta.faa \
+        -d /isg/shared/databases/Diamond/RefSeq/complete.protein.faa.205.dmnd \
+        -d /isg/shared/databases/Diamond/Uniprot/uniprot_sprot.dmnd \
+        --ontology 0 \
+        --threads 16
+``` 
+Complete slurm script is [entap.sh](12_entap/mono/entap.sh).  
+
+multi:  
+```
+EnTAP --runP \
+        -i ../../14_gfacs/2_round/multi_o/genes.fasta.faa \
+        -d /isg/shared/databases/Diamond/RefSeq/complete.protein.faa.205.dmnd \
+        -d /isg/shared/databases/Diamond/Uniprot/uniprot_sprot.dmnd \
+        --ontology 0 \
+        --threads 16
+``` 
+
 
 
 ## Long Read Annotation  
