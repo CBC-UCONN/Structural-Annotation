@@ -1115,3 +1115,15 @@ braker
 └── what-to-cite.txt
 ``` 
 
+### BUSCO evaluation  
+Next is to evaluate the proteins using BUSCO. 
+```
+busco -i ./braker/augustus.hints.aa \
+        -o braker_busco \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
+```  
+Complete slurm script is [busco.sh](15_braker/busco.sh).
+
+![](images/15_braker_busco.png)  
+
