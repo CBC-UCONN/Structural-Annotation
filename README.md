@@ -895,6 +895,26 @@ maker -base second_iter maker_opts.ctl maker_bopts.ctl maker_exe.ctl
 complete slurm script is called [maker.sh](10_maker/2_round/2_round_maker/maker.sh) 
 
 ### busco evaluation   
+We will evaluate the buso score for round 1 and round 2 maker outputs.  
+For round 1 maker output:  
+```
+busco -i ../1_round_maker/first_iter.all.maker.proteins.fasta \
+        -o 1_round_maker \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
+
+```  
+Complete slurm script [busco.sh](10_maker/1_round/busco/busco.sh)   
+
+For round 2 maker output:  
+```
+busco -i ../2_round_maker/second_iter.all.maker.proteins.fasta \
+        -o 2_round_maker \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
+```  
+
+Complete slurm script [busco.sh](10_maker/2_round/busco/busco.sh)
 
 ![](images/busco_marker_rounds.png)    
 
