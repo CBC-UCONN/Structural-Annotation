@@ -20,8 +20,8 @@ Contents
 13.  [Functional annotation using EnTap](#13-functional-annotation-using-entap)   
 
 Long Read Annotation   
-12.   [Data Download]()   
-13.   []
+14.   [Long read data download](#14-long-read-data-download)   
+15.   []
 
 
 ## 1.  Overview
@@ -1016,4 +1016,65 @@ EnTAP --runP \
 
 ## Long Read Annotation  
 
+## 14. Long read data download  
+In this study we will be using long read RNA-Seq data from oxford nanopore sequencer. These samples are downloaded from NCBI SRA data bank using the sra toolkit (SRR10611193, SRR10611194, SRR10611195)
+
+```
+13_longread_data/
+├── SRR10611193_1.fasta
+├── SRR10611194_1.fasta
+└── SRR10611195_1.fasta
+```
+
+## 15. Aligning the reads to genome using minimap2  
+For the alinging of long reads we will be using minimap2 program.  
+
+```
+preset="splice -uf -k14"
+genome=../genome/Athaliana_167_TAIR9.fa.masked
+minimap2 -ax $genome ../data/SRR10611193_1.fasta -o SRR10611193.sam -t 8
+minimap2 -ax $preset $genome ../data/SRR10611194_1.fasta -o SRR10611194.sam -t 8
+minimap2 -ax $preset $genome ../data/SRR10611195_1.fasta -o SRR10611195.sam -t 8
+```  
+
+Options used:
+```
+-a           output in the SAM format
+-x STR       preset
+               splice: long-read spliced alignment 
+-k INT       k-mer size
+-t INT       number of threads
+```
+Complete slurm script [minimap2.sh](14_align/minimap2.sh).  
+This will produce the following sequenced aligned files:  
+```
+14_align
+├── SRR10611193.sam
+├── SRR10611194.sam
+└── SRR10611195.sam
+```  
+
+Next we will convert the SAM files to binary format and will be sorting them using the following command: 
+```
+samtools view -b -@ 16 $file | samtools sort -o sorted_${fname%.sam}.bam -@ 16
+```  
+ It will produce the sorted BAM files.  
+```
+14_align
+├── sorted_SRR10611193.bam
+├── sorted_SRR10611194.bam
+└── sorted_SRR10611195.bam
+```  
+
+
+he final step is to combine all the BAM files together to get a final merged BAM file using the command:  
+```
+samtools merge ${prefix}.merged.bam sorted_*.bam
+``` 
+
+```
+14_align
+├── arabidopsis.merged.bam
+```  
+complete slurm script is called [samtobam.sh](14_align/samtobam.sh). 
 
