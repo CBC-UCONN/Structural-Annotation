@@ -24,7 +24,8 @@ Long Read Annotation
 15.   [Aligning reads using minimap2](#15-aligning-the-reads-to-genome-using-minimap2)   
 16.   [Braker](#16-braker)   
 17.   [gFACs](#17-gfacs)   
-18.   [Functional annotation using EnTap]
+18.   [Functional annotation using EnTap](#18-functional-annotation-using-entap)  
+
 
 
 ## 1.  Overview
