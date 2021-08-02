@@ -1127,3 +1127,97 @@ Complete slurm script is [busco.sh](15_braker/busco.sh).
 
 ![](images/15_braker_busco.png)  
 
+
+## 17. gFACs:  
+sing gFACs to extract viable genes and proteins after the Braker with out using any filters:  
+```
+perl "$script" \
+        -f braker_2.1.2_gff3 \
+        --statistics \
+        --splice-table \
+        --get-protein-fasta \
+        --fasta "$genome" \
+        -O general \
+        "$alignment"
+```
+The complete slurm script is [16a_gfacs_general.sh](16_gfacts/16a_gfacs_general.sh).  
+
+### Evaluate using BUSCO 
+Busco evaluation can be done using:
+```
+busco -i general/genes.fasta.faa \
+        -o general_busco \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
+```
+Complete slurm script is [16b_busco_general.sh](16_gfacts/16b_busco_general.sh).
+
+Using gFACs to extract viable genes and proteins after the Braker.  
+```
+perl "$script" \
+        -f braker_2.1.2_gff3 \
+        --statistics \
+        --statistics-at-every-step \
+        --splice-table \
+        --unique-genes-only \
+        --rem-multiexonics \
+        --rem-all-incompletes \
+        --rem-genes-without-start-codon \
+        --rem-genes-without-stop-codon \
+        --min-CDS-size 300 \
+        --get-protein-fasta \
+        --fasta "$genome" \
+        -O mono_o \
+        "$alignment"
+
+perl "$script" \
+        -f braker_2.1.2_gff3 \
+        --statistics \
+        --statistics-at-every-step \
+        --splice-table \
+        --unique-genes-only \
+        --rem-monoexonics \
+        --min-exon-size 6 \
+        --min-intron-size 9 \
+        --min-CDS-size 300 \
+        --get-protein-fasta \
+        --fasta "$genome" \
+        -O multi_o \
+        "$alignment"
+
+```
+
+Complete slurm script [16c_gfacs.sh](16_gfacts/16c_gfacs.sh). 
+
+The will get mono and mutli exonic genes:  
+```
+mono_o
+├── genes.fasta.faa
+├── gene_table.txt
+├── gFACs_log.txt
+└── statistics.txt
+multi_o/
+├── genes.fasta.faa
+├── gene_table.txt
+├── gFACs_log.txt
+└── statistics.txt
+``` 
+
+### Evaluate using BUSCO  
+Next we will evaluate the proteins using BUSCO:
+```
+busco -i mono_o/genes.fasta.faa \
+        -o mono_busco \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
+
+busco -i multi_o/genes.fasta.faa \
+        -o multi_busco \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
+```  
+
+complete slurm script is [16d_busco.sh](16_gfacts/16d_busco.sh).  
+
+![](images/16_gfacts_general_mono_multi_busco.png)  
+
