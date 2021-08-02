@@ -23,7 +23,8 @@ Long Read Annotation
 14.   [Long read data download](#14-long-read-data-download)   
 15.   [Aligning reads using minimap2](#15-aligning-the-reads-to-genome-using-minimap2)   
 16.   [Braker](#16-braker)   
-17.   []
+17.   [gFACs](#17-gfacs)   
+18.   [Functional annotation using EnTap]
 
 
 ## 1.  Overview
@@ -1220,4 +1221,31 @@ busco -i multi_o/genes.fasta.faa \
 complete slurm script is [16d_busco.sh](16_gfacts/16d_busco.sh).  
 
 ![](images/16_gfacts_general_mono_multi_busco.png)  
+
+## 18. Functional annotation using EnTap   
+
+In this step we will annotate the protein sequences using EnTAP. 
+
+**mono** 
+EnTAP --runP \
+        -i ../../16_gfacts/mono_o/genes.fasta.faa \
+        -d /isg/shared/databases/Diamond/RefSeq/complete.protein.faa.205.dmnd \
+        -d /isg/shared/databases/Diamond/Uniprot/uniprot_sprot.dmnd \
+        --ontology 0 \
+        --threads 16
+```
+Complete slurm script is called [entap.sh](17_entap/mono_o/entap.sh)
+
+**multi** 
+```
+EnTAP --runP \
+        -i ../../16_gfacts/multi_o/genes.fasta.faa \
+        -d /isg/shared/databases/Diamond/RefSeq/complete.protein.faa.205.dmnd \
+        -d /isg/shared/databases/Diamond/Uniprot/uniprot_sprot.dmnd \
+        --ontology 0 \
+        --threads 16
+```
+Complete slurm script is called [entap.sh](17_entap/multi_o/entap.sh)
+
+
 
