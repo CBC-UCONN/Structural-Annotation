@@ -1228,6 +1228,7 @@ complete slurm script is [16d_busco.sh](16_gfacts/16d_busco.sh).
 In this step we will annotate the protein sequences using EnTAP. 
 
 **mono** 
+```
 EnTAP --runP \
         -i ../../16_gfacts/mono_o/genes.fasta.faa \
         -d /isg/shared/databases/Diamond/RefSeq/complete.protein.faa.205.dmnd \
