@@ -66,7 +66,17 @@ awk '{s++}END{print s/4}' SRR6852085_1.fastq
 As each fastq file contains 4 lines per each read, you will need to divide the total number of counts you get, by that number, which will give you the number of reads in the sample.  
 
 
-## 3. Quality control of reads
+## 3. Quality control of reads  
+
+### Quality check of the reads using FASTQC   
+In here we will use the FASTQC package to check the quality of the reads.   
+```
+mkdir -p raw_fastqc_out
+fastqc --threads 2 -o ./raw_fastqc_out ../01_raw_data/*.fastq 
+```  
+complete slurm script [02a_raw_fastqc.sh](02_qc/02a_raw_fastqc.sh).
+
+
 We also want to trim our files to only take high-quality reads. We use the program sickle to trim our files. For information on sickle and its options, you may visit the paired-end reference section of the github provided prior. 
 
 ```
