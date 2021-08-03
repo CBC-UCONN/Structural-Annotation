@@ -997,7 +997,7 @@ busco -i general/genes.fasta.faa \
         -o 2_round_maker_general \
         -c 8 \
         -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
-        
+
 busco -i mono_o/genes.fasta.faa \
         -o 2_round_maker_mono \
         -c 8 \
@@ -1010,7 +1010,7 @@ busco -i multi_o/genes.fasta.faa \
 ```  
 The complete slurm script is [busco.sh](11_gfacs/2_round/busco.sh).  
 
-![](images/maker2_gfacs_mono-vs-multi.png)   
+![](images/11_gfacs_2_round_general_mono_multi.png)   
 
 ## 13. Functional annotation using EnTap  
 In this step we will annotate the protein sequences we got from the gfacs.  
