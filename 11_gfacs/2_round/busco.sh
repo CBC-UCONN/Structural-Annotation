@@ -7,7 +7,7 @@
 #SBATCH --partition=mcbstudent
 #SBATCH --qos=mcbstudent
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=neranjan007@gmail.com
+#SBATCH --mail-user=
 #SBATCH -o %x_%A.out
 #SBATCH -e %x_%A.err
 
@@ -23,6 +23,10 @@ module load busco/5.0.0
 AUG_HOME=/labs/CBC/Tutorials/software/Augustus
 export AUGUSTUS_CONFIG_PATH=${AUG_HOME}/config
 
+busco -i general/genes.fasta.faa \
+        -o 2_round_maker_general \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
 
 busco -i mono_o/genes.fasta.faa \
         -o 2_round_maker_mono \

@@ -21,6 +21,10 @@ genome="../../13_marker/1_round/1_round_maker/Athaliana_167_TAIR9.fa.masked"
 alignment="../../13_marker/2_round/2_round_maker/second_iter.all.gff"
 script="/labs/Wegrzyn/gFACs/gFACs.pl"
 
+if [ ! -d general ]; then
+        mkdir general
+fi
+
 if [ ! -d mono_o ]; then
         mkdir mono_o 
 fi
@@ -30,7 +34,16 @@ if [ ! -d multi_o ]; then
 fi
 
 perl "$script" \
-        -f braker_2.1.2_gff3 \
+        -f maker_2.31.9_gff \
+        --statistics \
+        --splice-table \
+        --get-protein-fasta \
+        --fasta "$genome" \
+        -O general \
+        "$alignment"
+
+perl "$script" \
+        -f maker_2.31.9_gff \
         --statistics \
         --statistics-at-every-step \
         --splice-table \
@@ -46,7 +59,7 @@ perl "$script" \
         "$alignment"
 
 perl "$script" \
-        -f braker_2.1.2_gff3 \
+        -f maker_2.31.9_gff \
         --statistics \
         --statistics-at-every-step \
         --splice-table \

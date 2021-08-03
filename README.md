@@ -930,7 +930,16 @@ In here we are using gFACs to extract viable genes and proteins after the maker 
 
 ```
 perl "$script" \
-        -f braker_2.1.2_gff3 \
+        -f maker_2.31.9_gff \
+        --statistics \
+        --splice-table \
+        --get-protein-fasta \
+        --fasta "$genome" \
+        -O general \
+        "$alignment"
+
+perl "$script" \
+        -f maker_2.31.9_gff \
         --statistics \
         --statistics-at-every-step \
         --splice-table \
@@ -946,7 +955,7 @@ perl "$script" \
         "$alignment"
 
 perl "$script" \
-        -f braker_2.1.2_gff3 \
+        -f maker_2.31.9_gff \
         --statistics \
         --statistics-at-every-step \
         --splice-table \
@@ -964,6 +973,11 @@ perl "$script" \
 The complete slurm script [gfacs.sh](11_gfacs/2_round/gfacs.sh).  
 The mono and multi exonic predicted genes will be written to the following output folders:  
 ```
+general/
+├── genes.fasta.faa
+├── gene_table.txt
+├── gFACs_log.txt
+└── statistics.txt
 mono_o/
 ├── genes.fasta.faa
 ├── gene_table.txt
@@ -979,6 +993,11 @@ multi_o/
 Once the gene prediction is done busco is used to evaluate the resutls of mono and exonic results. 
 
 ```
+busco -i general/genes.fasta.faa \
+        -o 2_round_maker_general \
+        -c 8 \
+        -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
+        
 busco -i mono_o/genes.fasta.faa \
         -o 2_round_maker_mono \
         -c 8 \
