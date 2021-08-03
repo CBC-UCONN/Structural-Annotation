@@ -75,7 +75,7 @@ mkdir -p raw_fastqc_out
 fastqc --threads 2 -o ./raw_fastqc_out ../01_raw_data/*.fastq 
 ```  
 complete slurm script [02a_raw_fastqc.sh](02_qc/02a_raw_fastqc.sh).
-
+FASTQC report information for SRR6852085_1.fastq can be found [here](FASTQC.md).
 
 We also want to trim our files to only take high-quality reads. We use the program sickle to trim our files. For information on sickle and its options, you may visit the paired-end reference section of the github provided prior. 
 
