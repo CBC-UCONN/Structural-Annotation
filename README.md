@@ -807,7 +807,55 @@ EnTAP --runP \
 The complete slurm script for multi exonic genes is [09_entap.sh](09_entap/multi_o/09_entap.sh).  
 
 
-The out put will be writen in the the *entap_outfiles/* folder, and more information on EnTAP can be found in [EnTAP documentation](https://entap.readthedocs.io/en/v0.9.0-beta/index.html), which has a very comprehensive description.
+The out put will be writen in the the *entap_outfiles/* folder.  
+```
+entap_outfiles
+├── final_results
+├── ontology
+├── similarity_search
+└── transcriptomes
+```   
+Similarity search directory will contain the results from the [diamond](https://github.com/bbuchfink/diamond) database(s) you included in your search. Inside the **processed/** folder you will find the information based on the hits returned from similarity searching against each database. This information contains the best hits (discussed previously) from each database based on e-value, coverage, informativeness, phylogenetic closeness, and contaminant status. 
+*    In the database you selected under the processed directory it will contain best_hits.faa and .fnn and .tsv files:    
+*    best_hits_contam.faa/.fnn/.tsv will contain contaminants (protein/nucleotide) separated from the best hits file.   
+*    best_hits_no_contam.faa/.fnn/.tsv will contain sequences (protein/nucleotide) that were selected as best hits and not flagged as contaminants  
+*    no_hits.faa/.fnn/.tsv contain sequences (protein/nucleotide) from the transcriptome that did not hit against this particular database   
+*    unselected.tsv will contain result in several hits for each query sequence. With only one best hit being selected, the rest are unselected and end up here  
+
+
+
+In the **Ontology** search folder we will find the ortholog groups / ontolgoy results agains EggNOG pipeline. Inside the processed folder it will contain the annotations.  
+
+In the **final_results** folder, it will contain the final EnTAP annotations. These files are the summation of each stage of the pipeline and contain the combined information. So these can be considered the most important files! Gene ontology terms are normalized to levels based on the input flag from the user (or the default of 0,3,4). A level of 0 within the filename indicates that ALL GO terms will be printed to the annotation file. Normalization of GO terms to levels is generally done before enrichment analysis and is based upon the hierarchical setup of the Gene Ontology database.   
+*    final_annotations_lvlX.tsv  :  X represents the normalized GO terms for the annotation   
+*    final_annotated.faa / .fnn  :  Nucleotide and protein fasta files containing all sequences that either hit databases through similarity searching or through the ontology stage   
+*    final_unannotated.aa / .fnn :  Nucleotide and protein fasta files containing all sequences that did not hit either through similarity searching nor through the ontology stage  
+
+
+In the following example it shows the results agains the **complete**
+diamond database we selected, and EggNOG pipeline and the final results.  
+```
+entap_outfiles/
+├── similarity_search/
+         ├── DIAMOND/  
+               ├── processed/  
+                      ├──  complete/  
+                              ├── best_hits*.faa/fna/tsv
+                              ├── best_hits_contam*.fnn/fna/tsv
+                              ├── best_hits_no_contam*.tsv/fna/tsv
+                              ├── unselected.tsv
+├── ontology/
+         ├── EggNOG_DMND/
+               ├── processed/
+                     ├──  annotated_sequences*.tsv/faa  
+├── final_results/
+         ├── final_annotations_lvlX.tsv  
+         ├── final_annotated.faa / .fnn  
+         ├── final_unannotated.aa / .fnn
+```     
+
+
+ More information on EnTAP can be found in [EnTAP documentation](https://entap.readthedocs.io/en/v0.9.0-beta/index.html), which has a very comprehensive description.
 
 
 
