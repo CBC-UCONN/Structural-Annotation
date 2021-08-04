@@ -386,6 +386,11 @@ The command options we will be using:
 ```
 The complete BUSCO scrip is called [04b_busco.sh](04_repeatmasker/04b_busco.sh).  
 
+In here the busco metrics proposed to describe genome/gene-set/transcriptome completeness used the the following notation: 
+Where recovered genes are marked as complete (C), and complete genes found with more than one copy is depected as duplicate (D), and complete single copy genes as single-copy (S) genes. The partial recovered genes are named as fragmented (F) and the genes which could not be found is named as missing (M) genes.  
+So the following notation is used in busco notation:  
+C: Complete, D: duplicated, F: fragmented, M: missing, n: number of genes used.   
+
 Summary of the inital assembly assesment using BUSCO:  
 ```
         --------------------------------------------------
