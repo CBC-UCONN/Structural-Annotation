@@ -608,8 +608,10 @@ busco -i ./braker/augustus.hints.aa \
         -c 8 \
         -l /isg/shared/databases/BUSCO/odb10/lineages/viridiplantae_odb10 -m prot
 ```  
-The complete slurm scrip is called [busco.sh](07_braker/busco.sh). Summary of the inital assembly assesment using BUSCO:  
-
+The complete slurm scrip is called [busco.sh](07_braker/busco.sh). Summary of the inital assembly assesment using BUSCO. In here the busco metrics proposed to describe genome/gene-set/transcriptome completeness used the the following notation: 
+Where recovered genes are marked as complete (C), and complete genes found with more than one copy is depected as duplicate (D), and complete single copy genes as single-copy (S) genes. The partial recovered genes are named as fragmented (F) and the genes which could not be found is named as missing (M) genes.  
+So the following notation is used in busco notation:  
+C: Complete, D: duplicated, F: fragmented, M: missing, n: number of genes used. 
 ```
         --------------------------------------------------
         |Results from dataset viridiplantae_odb10         |
@@ -622,7 +624,8 @@ The complete slurm scrip is called [busco.sh](07_braker/busco.sh). Summary of th
         |2      Missing BUSCOs (M)                        |
         |425    Total BUSCO groups searched               |
         --------------------------------------------------  
-```  
+```   
+
 
 
 
@@ -1280,3 +1283,7 @@ Complete slurm script is called [entap.sh](17_entap/multi_o/entap.sh)
 
 
 
+## Evaluation of the gene annotation and proteins
+
+## GFFCompare   
+GFFCompare can be used to compare different gene annotations. In the above sections we have analyse the gene content in the genome using three annotation processes. 
