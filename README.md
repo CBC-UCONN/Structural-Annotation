@@ -16,14 +16,14 @@ Contents
 9.   [Quality Control and Filtering: gFACs](#9-quality-control-and-filtering-gfacs)  
 10.  [Functional annotation using EnTap](#10-functional-annotation-using-entap) 
 11.  [Gene prediction using maker](#11-gene-prediction-using-maker)
-12.  [Quality Control and Filtering: gFACs](#12-gfacs)  
+12.  [Quality Control and Filtering: gFACs](#12-quality-control-and-filtering-gfacs)  
 13.  [Functional annotation using EnTap](#13-functional-annotation-using-entap)   
 
 Long Read Annotation   
 14.   [Long read data download](#14-long-read-data-download)   
 15.   [Aligning reads using minimap2](#15-aligning-the-reads-to-genome-using-minimap2)   
 16.   [Braker](#16-braker)   
-17.   [Quality Control and Filtering: gFACs](#17-gfacs)   
+17.   [Quality Control and Filtering: gFACs](#17-quality-control-and-filtering-gfacs)   
 18.   [Functional annotation using EnTap](#18-functional-annotation-using-entap)  
 19.   [GFFCompare](#19-gffcompare)    
 20.   [Orthofinder](#20-orthofinder)  
