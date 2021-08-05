@@ -946,7 +946,7 @@ In this round you will run maker, snap and aguastus
           ```  
 
 
-2.  Run 2 - secound round  
+2.  Run 2 - second round  
 In this round we will be using the marker derived gff3 file, snap created hmm file and the agustus gene prediction species model from the first round as input files. We will be changing the maker_opts.ctl file to include the above while keeping the others intact.  
 So in the 'maker_opts.ctl' file, in  Re-annotation Using MAKER Derived GFF3 section:
 ```
@@ -967,7 +967,23 @@ The complete marker control files: [maker_exe.ctl](10_maker/2_round/2_round_make
 maker -base second_iter maker_opts.ctl maker_bopts.ctl maker_exe.ctl
 ```  
 
-complete slurm script is called [maker.sh](10_maker/2_round/2_round_maker/maker.sh) 
+complete slurm script is called [maker.sh](10_maker/2_round/2_round_maker/maker.sh)   
+
+This will produce the following files:  
+```
+2_round_maker/
+├── second_iter.all.gff
+├── second_iter.all.maker.augustus.proteins.fasta
+├── second_iter.all.maker.augustus.transcripts.fasta
+├── second_iter.all.maker.non_overlapping_ab_initio.proteins.fasta
+├── second_iter.all.maker.non_overlapping_ab_initio.transcripts.fasta
+├── second_iter.all.maker.proteins.fasta
+├── second_iter.all.maker.snap.proteins.fasta
+├── second_iter.all.maker.snap.transcripts.fasta
+├── second_iter.all.maker.transcripts.fasta
+└── second_iter.maker.output
+```  
+
 
 ### busco evaluation   
 We will evaluate the buso score for round 1 and round 2 maker outputs.  
@@ -1168,7 +1184,29 @@ samtools merge ${prefix}.merged.bam sorted_*.bam
 14_align
 ├── arabidopsis.merged.bam
 ```  
-complete slurm script is called [samtobam.sh](14_align/samtobam.sh). 
+complete slurm script is called [samtobam.sh](14_align/samtobam.sh).   
+
+To check the alignment we can use samtools flagstat command.  
+```
+samtools flagstat -@ 8 sorted_SRR10611193.bam
+samtools flagstat -@ 8 sorted_SRR10611194.bam
+samtools flagstat -@ 8 sorted_SRR10611195.bam
+```
+The complete slurm script is called [samstats.sh](14_align/samstats.sh).
+Which will give 
+```
+SRR10611193
+8282734 + 0 mapped (98.98% : N/A)
+
+SRR10611194
+7546750 + 0 mapped (94.60% : N/A)
+
+SRR10611195
+6990725 + 0 mapped (97.73% : N/A)
+
+```   
+
+
 
 
 ## 16. BRAKER  
