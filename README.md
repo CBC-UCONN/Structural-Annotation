@@ -1421,3 +1421,38 @@ Intron chain level:    33.4     |    46.3    |
  Total union super-loci across all input datasets: 21518 
  ```  
 
+
+## Orthofinder  
+Orthofinder is a toold which finds orthologues and orthogroups for the species being analyzed. In the simple use you need is protein sequences in FASTA format, and here we provide our FASTA files we got from our analysis.  
+
+In our working folder we will have the following fasta files from the braker, maker and long-read braker runs.
+```
+19_orthofinder
+├── fasta
+│   ├── augustus.hints.fa
+│   ├── augustus.hints.longread.fa
+│   └── second_iter.all.maker.proteins.fa
+```  
+
+Command:  
+```
+module load OrthoFinder/2.5.1 
+module load muscle
+module load DLCpar/1.0
+module load FastME
+module load diamond/0.9.25
+module load mcl
+
+orthofinder -f fasta -S diamond -t 16
+```  
+
+Useage: 
+```
+orthofinder [options] -f <dir>  
+-S <txt>        Sequence search program [Default = diamond]
+-f <dir>        directory containing fasta files
+```  
+
+The complete slurm script is called [orthofinder.sh](19_orthofinder/orthofinder.sh).  
+
+
