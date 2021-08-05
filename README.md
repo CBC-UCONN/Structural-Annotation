@@ -25,8 +25,10 @@ Long Read Annotation
 16.   [Braker](#16-braker)   
 17.   [gFACs](#17-gfacs)   
 18.   [Functional annotation using EnTap](#18-functional-annotation-using-entap)  
-19.   [GFFCompare](#19-gffcompare)
-20.   [Orthofinder](#20-orthofinder)
+19.   [GFFCompare](#19-gffcompare)    
+20.   [Orthofinder](#20-orthofinder)  
+
+
 
 
 ## 1.  Overview
