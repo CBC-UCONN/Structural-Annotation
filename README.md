@@ -1449,10 +1449,79 @@ orthofinder -f fasta -S diamond -t 16
 Useage: 
 ```
 orthofinder [options] -f <dir>  
--S <txt>        Sequence search program [Default = diamond]
+-S <txt>        Sequence search program [Default = diamond] 
+                 Options: blast, mmseqs, blast_gz, diamond, blast_nucl
 -f <dir>        directory containing fasta files
+-t              number of threads [this is for blast searches]
 ```  
 
 The complete slurm script is called [orthofinder.sh](19_orthofinder/orthofinder.sh).  
 
+A standard OrthoFinder run produces a set of files describing the orthogroups, orthologues and gene trees for the set of speices being analyzed.   
+```  
+orthofinder
+└── fasta
+    └── OrthoFinder
+        └── Results_Jul30
+            ├── Comparative_Genomics_Statistics
+            ├── Gene_Duplication_Events
+            ├── Gene_Trees
+            ├── Orthogroups
+            ├── Orthogroup_Sequences
+            ├── Orthologues
+            ├── Phylogenetically_Misplaced_Genes
+            ├── Phylogenetic_Hierarchical_Orthogroups
+            ├── Putative_Xenologs
+            ├── Resolved_Gene_Trees
+            ├── Single_Copy_Orthologue_Sequences
+            ├── Species_Tree
+            └── WorkingDirectory
+```  
+
+In the `Statistics_PerSpecies.tsv` file in **Comparative_Genomics_Statistics** folder it will contain stats which gives some general idea.  
+```
+Number of genes	                                27958	29645	22967
+Number of genes in orthogroups	                27592	29087	22210
+Number of unassigned genes	                366	558	757
+Percentage of genes in orthogroups	        98.7	98.1	96.7
+Percentage of unassigned genes	                1.3	1.9	3.3
+Number of orthogroups containing species	22991	22984	16791
+Percentage of orthogroups containing species	98.6	98.5	72.0
+Number of species-specific orthogroups	33	43	119
+Number of genes in species-specific orthogroups	96	113	1348
+Percentage of genes in species-specific orthogroups	0.3	0.4	5.9
+```  
+
+In `Statistics_Overall.tsv` will contain overall stats:  
+```
+Number of species       3
+Number of genes 80570
+Number of genes in orthogroups  78889
+Number of unassigned genes      1681
+Percentage of genes in orthogroups      97.9
+Percentage of unassigned genes  2.1
+Number of orthogroups   23328
+Number of species-specific orthogroups  195
+Number of genes in species-specific orthogroups 1557
+Percentage of genes in species-specific orthogroups     1.9
+```   
+
+In the **Orthogroups** folder  
+`Orthogroups.tsv :` is  tab separated text file. Each row contains the genes belonging to a single orthogroup. The genes from each orthogroup are organized into columns, one per species  
+`Orthogroups_UnassignedGenes.tsv : ` is separated text file that is identical in format to Orthogroups.csv but contains all of the genes that were not assigned to any orthogroup.
+`Orthogroups.GeneCount.tsv :`  gives the count of genes in each orthogroup in each fasta file  
+```
+Orthogroup	augustus.hints	augustus.hints.longread	second_iter.all.maker.proteins	Total
+OG0000000	2	1	197	200
+OG0000001	0	2	177	179
+OG0000002	1	2	156	159
+OG0000003	1	2	150	153
+OG0000004	0	0	99	99
+OG0000005	1	1	84	86
+OG0000006	0	0	84	84
+```  
+
+`Orthogroups_SingleCopyOrthologues.txt :` it gives the group names for groups where there was a single protein in the group for each annotation.  
+
+More information on the output files can be found in the OrthoFinder [manual](https://github.com/davidemms/OrthoFinder/blob/master/OrthoFinder-manual.pdf)  
 
