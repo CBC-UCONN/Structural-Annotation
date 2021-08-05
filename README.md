@@ -13,17 +13,17 @@ Contents
 6.   [Mapping RNA-Seq reads with HISAT2](#6-mapping-rna-seq-reads-with-hisat2) 
 7.   [Aligning short reads](#7-aligning-short-reads)  
 8.   [BRAKER2: identifying and predicting genes with RNA-Seq data](#8-braker2-identifying-and-predicting-genes-with-rna-seq-data)  
-9.   [gFACs](#9-gfacs)  
+9.   [Quality Control and Filtering: gFACs](#9-gfacs)  
 10.  [Functional annotation using EnTap](#10-functional-annotation-using-entap) 
 11.  [Gene prediction using maker](#11-gene-prediction-using-maker)
-12.  [gFACs](#12-gfacs)  
+12.  [Quality Control and Filtering: gFACs](#12-gfacs)  
 13.  [Functional annotation using EnTap](#13-functional-annotation-using-entap)   
 
 Long Read Annotation   
 14.   [Long read data download](#14-long-read-data-download)   
 15.   [Aligning reads using minimap2](#15-aligning-the-reads-to-genome-using-minimap2)   
 16.   [Braker](#16-braker)   
-17.   [gFACs](#17-gfacs)   
+17.   [Quality Control and Filtering: gFACs](#17-gfacs)   
 18.   [Functional annotation using EnTap](#18-functional-annotation-using-entap)  
 19.   [GFFCompare](#19-gffcompare)    
 20.   [Orthofinder](#20-orthofinder)  
@@ -637,7 +637,7 @@ C: Complete, D: duplicated, F: fragmented, M: missing, n: number of genes used.
 
 
 
-## 9. gFACs 
+## 9. Quality Control and Filtering: gFACs 
 In here we are using [gFACs](https://gitlab.com/PlantGenomicsLab/gFACs) to extract viable genes and proteins.  
 
 As the inital phase we will use gFACs with out any filters to extract the genes and proteins using the following:   
