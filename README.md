@@ -13,7 +13,7 @@ Contents
 6.   [Mapping RNA-Seq reads with HISAT2](#6-mapping-rna-seq-reads-with-hisat2) 
 7.   [Aligning short reads](#7-aligning-short-reads)  
 8.   [BRAKER2: identifying and predicting genes with RNA-Seq data](#8-braker2-identifying-and-predicting-genes-with-rna-seq-data)  
-9.   [Quality Control and Filtering: gFACs](#9-gfacs)  
+9.   [Quality Control and Filtering: gFACs](#9-quality-control-and-filtering-gfacs)  
 10.  [Functional annotation using EnTap](#10-functional-annotation-using-entap) 
 11.  [Gene prediction using maker](#11-gene-prediction-using-maker)
 12.  [Quality Control and Filtering: gFACs](#12-gfacs)  
@@ -1010,7 +1010,7 @@ Complete slurm script [busco.sh](10_maker/2_round/busco/busco.sh)
 ![](images/busco_marker_rounds.png)    
 
 
-## 12. gfacs  
+## 12. Quality Control and Filtering: gFACs  
 In here we are using gFACs to extract viable genes and proteins after the maker run.  
 
 ```
@@ -1256,7 +1256,7 @@ Complete slurm script is [busco.sh](15_braker/busco.sh).
 ![](images/15_braker_busco.png)  
 
 
-## 17. gFACs:  
+## 17. Quality Control and Filtering: gFACs  
 sing gFACs to extract viable genes and proteins after the Braker with out using any filters:  
 ```
 perl "$script" \
