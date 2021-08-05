@@ -25,7 +25,8 @@ Long Read Annotation
 16.   [Braker](#16-braker)   
 17.   [gFACs](#17-gfacs)   
 18.   [Functional annotation using EnTap](#18-functional-annotation-using-entap)  
-
+19.   [GFFCompare](#19-gffcompare)
+20.   [Orthofinder](#20-orthofinder)
 
 
 ## 1.  Overview
@@ -1338,7 +1339,7 @@ Complete slurm script is called [entap.sh](17_entap/multi_o/entap.sh)
 
 ## Evaluation of the gene annotation and proteins
 
-## GFFCompare   
+## 19. GFFCompare   
 GFFCompare can be used to compare different gene annotations. In the above sections we have analyse the gene content in the genome using three annotation processes. 
 
 In the working directory we have our 3 gff files which we are going to compare against the reference annotation file of arabidopsis:
@@ -1422,7 +1423,7 @@ Intron chain level:    33.4     |    46.3    |
  ```  
 
 
-## Orthofinder  
+## 20. Orthofinder  
 Orthofinder is a toold which finds orthologues and orthogroups for the species being analyzed. In the simple use you need is protein sequences in FASTA format, and here we provide our FASTA files we got from our analysis.  
 
 In our working folder we will have the following fasta files from the braker, maker and long-read braker runs.
