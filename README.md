@@ -1340,3 +1340,84 @@ Complete slurm script is called [entap.sh](17_entap/multi_o/entap.sh)
 
 ## GFFCompare   
 GFFCompare can be used to compare different gene annotations. In the above sections we have analyse the gene content in the genome using three annotation processes. 
+
+In the working directory we have our 3 gff files which we are going to compare against the reference annotation file of arabidopsis:
+```
+18_gffcompare/
+├── braker_augustus.hints.gff3
+├── marker_second_iter.all.gff
+├── longRead_braker.gtf
+```  
+Command:  
+```
+module load gffcompare/0.10.4
+
+gffcompare -R -r TAIR9_GFF3_genes.gff -o ref_braker braker_augustus.hints.gff3
+
+gffcompare -R -r TAIR9_GFF3_genes.gff -o ref_marker marker_second_iter.all.gff
+
+gffcompare -R -r TAIR9_GFF3_genes.gff -o ref_longRead longRead_braker.gtf
+
+```  
+
+Usage of the command:  
+```
+gffcompare [options]* {-i <input_gtf_list> | <input1.gtf> [<input2.gtf> .. <inputN.gtf>]}
+
+-r reference annotation file (GTF/GFF)
+-R for -r option, consider only the reference transcripts that overlap any of the input transfrags 
+-o <outprefix>
+```
+
+The complete slurm script is called [gffcmp.sh](18_gffcompare/gffcmp.sh)
+
+It will produce the following files for each compare: 
+```
+18_gffcompare/
+├── *.annotated.gtf
+├── *.loci
+├── *.refmap
+├── *.tmap
+├── *.stats
+├── *.tracking
+```  
+
+`*.stats :` file it will contain the statistics related to the accuracy of the inputs when compared to the reference annotation. The measurements of sensitivity and precision are calculated at various levels (nucleotide, exon, intron, transcript, gene) for each input file.   
+
+`*.annotated.gtf :` file is produced when only one input file is provided.  
+
+`*.tracking : ` file  matches up between samples. Where each represents a transcript structure that is preserved accross the input GFF files and the program considers matching if all there introns are identical. When the `-r` option is used the 3rd column represents the reference annotation that was found to be closest (best match).  
+
+`*.refmap :` file contains the either fully or partially matchers that of reference transcript.  
+
+`*.tmap :`  file contains the most closely matching reference for each query value.
+
+For reference vs marker the stat file looks like:  
+```
+#= Summary for dataset: marker_second_iter.all.gff 
+#     Query mRNAs :   22927 in   22924 loci  (17264 multi-exon transcripts)
+#            (1 multi-transcript loci, ~1.0 transcripts per locus)
+# Reference mRNAs :   29919 in   24151 loci  (23932 multi-exon)
+# Super-loci w/ reference transcripts:    21176
+#-----------------| Sensitivity | Precision  |
+        Base level:    75.3     |    97.1    |
+        Exon level:    61.3     |    63.9    |
+      Intron level:    81.6     |    81.6    |
+Intron chain level:    33.4     |    46.3    |
+  Transcript level:    30.9     |    40.3    |
+       Locus level:    38.3     |    40.4    |
+
+     Matching intron chains:    7995
+       Matching transcripts:    9250
+              Matching loci:    9247
+
+          Missed exons:   13170/143596  (  9.2%)
+           Novel exons:    5331/137111  (  3.9%)
+        Missed introns:   11526/114131  ( 10.1%)
+         Novel introns:   14387/114185  ( 12.6%)
+           Missed loci:       0/24151   (  0.0%)
+            Novel loci:     334/22924   (  1.5%)
+
+ Total union super-loci across all input datasets: 21518 
+ ```  
+
