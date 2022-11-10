@@ -1,15 +1,15 @@
 # Structural Annotation 
 
-This repository is a usable, publicly available differential expression and functional annotation tutorial.
-All steps have been provided for the UConn CBC Xanadu cluster here with appropriate headers for the Slurm scheduler that can be modified simply to run.  Commands should never be executed on the submit nodes of any HPC machine.  If working on the Xanadu cluster, you should use sbatch scriptname after modifying the script for each stage.  Basic editing of all scripts can be performed on the server with tools, such as nano, vim, or emacs.  If you are new to Linux, please use <a href="https://bioinformatics.uconn.edu/unix-basics/">this</a> handy guide for the operating system commands.  In this guide, you will be working with common bioinformatic file formats, such as <a href="https://en.wikipedia.org/wiki/FASTA_format">FASTA</a>, <a href="https://en.wikipedia.org/wiki/FASTQ_format">FASTQ</a>, <a href="https://en.wikipedia.org/wiki/SAM_(file_format)">SAM/BAM</a>, and <a href="https://en.wikipedia.org/wiki/General_feature_format">GFF3/GTF</a>. You can learn even more about each file format <a href="https://bioinformatics.uconn.edu/resources-and-events/tutorials/file-formats-tutorial/">here</a>. If you do not have a Xanadu account and are an affiliate of UConn/UCHC, please apply for one <a href="https://bioinformatics.uconn.edu/contact-us/">here</a>.  
+This repository is a tutorial for genome annotation. The scripts are set up to run on UConn's Xanadu cluster, including Xanadu-specific SLURM headers and software modules. To run it on Xanadu, simply clone this repository and start submitting the scripts by following along with this readme. If you are interested in running it elsewhere, you'll need to install the relevant software and alter or remove the SLURM headers, but otherwise, the tutorial is self-contained and pulls the necessary data from public databases.
+
+Commands should never be executed on the submit nodes of any HPC machine.  If working on the Xanadu cluster, you should use `sbatch scriptname` after modifying the script for each stage.  Basic editing of all scripts can be performed on the server with tools such as `nano`, `vim`, or `emacs`.  If you are new to Linux, please use [this](https://bioinformatics.uconn.edu/unix-basics) handy guide for the operating system commands.  The tutorial assumes basic familiarity with Linux. In this guide, you will be working with common bioinformatic file formats, such as [FASTA](https://en.wikipedia.org/wiki/FASTA_format), [FASTQ](https://en.wikipedia.org/wiki/FASTQ_format), [SAM/BAM](https://en.wikipedia.org/wiki/SAM_(file_format)), and [GFF3/GTF](https://en.wikipedia.org/wiki/General_feature_format). You can learn more about each file format [here](https://bioinformatics.uconn.edu/resources-and-events/tutorials/file-formats-tutorial/). If you do not have a Xanadu account and are an affiliate of UConn/UCHC, please apply for one **[here](https://bioinformatics.uconn.edu/contact-us/)**.
 
 
 Contents
 1.   [Overview](#1-overview)
 2.   [Downloading Data](#2-downloading-the-data)
+3.   [Identifying and Masing Repetitive Elements](#3-identifying-and-masking-repetitive-elements)
 3.   [Quality control of reads](#3-quality-control-of-reads)
-4.   [Identifying Regions of Genomic Repetition with RepeatModeler](#4-identifying-regions-of-genomic-repetition-with-repeatmodeler)
-5.   [Masking Regions of Genomic Repetition with RepeatMasker](#5-masking-regions-of-genomic-repetition-with-repeatmasker)
 6.   [Mapping RNA-Seq reads with HISAT2](#6-mapping-rna-seq-reads-with-hisat2) 
 7.   [Aligning short reads](#7-aligning-short-reads)  
 8.   [BRAKER2: identifying and predicting genes with RNA-Seq data](#8-braker2-identifying-and-predicting-genes-with-rna-seq-data)  
@@ -32,27 +32,138 @@ Long Read Annotation
 
 
 ## 1.  Overview
-In this tutorial we will be performing functional and structural annotation of Arabidopsis thaliana using data of its leaves at 4 weeks of age.  
-The workflow may be cloned into the appropriate directory using the terminal command: 
+In this tutorial, we'll annotate an *Arabidopsis thaliana* genome using a variety of methods. We'll use both RNA-seq data from leaf tissue and a database of green plant proteins as evidence in the annotation process. To get started, you can clone the tutorial repository to obtain all the scripts we're going to run. If you're working on UConn's Xanadu cluster, you can submit each script without modification. If you're working elsewhere, you will have to make sure the software is installed and modify or remove the SLURM headers, as appropriate to your system. To clone the repository:
+
 ```
 git clone repository.git
 ```
 
+You'll notice the structure of the directory is initially pretty spare. Each script will create, as necessary, directories to hold data and results as you move along. 
+
+### `SLURM`
+UConn's Xanadu cluster uses `SLURM` to manage resources. Scripts to accomplish some task or requests for resources for interactive analysis, are routed through it. If you're working through the tutorial on Xanadu, you can submit each script using the command `sbatch` (e.g. `sbatch get_genome.sh`). `SLURM` will then queue your job, and when resources become available, run your code. Any output from your code that is written to the *standard output* or *standard error* channels is captured for later review. When submitting scripts via `sbatch`, we usually specify the resource request in a *header*. We'll review an example header here so we don't have to for every script going forward. 
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=getgenome
+#SBATCH -o %x_%j.out
+#SBATCH -e %x_%j.err
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH -c 1
+#SBATCH --mem=10G
+#SBATCH --partition=general
+#SBATCH --qos=general
+#SBATCH --mail-type=END
+#SBATCH --mail-user=your.email@uconn.edu
+```
+
+The first line is the *shebang*, indicating the script is `bash` code. The following lines, beginning with `#SBATCH`, pertain to `SLURM`. We specify a job name with `--job-name`, and the format of the names of the files that capture the standard output (`-o`) and the standard error (`-e`). In this case for `-o`, the format will be `JOBNAME_JOBID.out`. You should always check the `.out` and `.err` files after a job completes. These will usually contain any error messages produced by your code. 
+
+The next six lines specify the resources requested. `-N 1` asks that the job be run on 1 node. `-n 1` tells SLURM we're only going to launch 1 task. `-c 1` requests 1 CPU for this task. `--mem=10G` requests 10 gigabytes of memory for this task. `--partition` asks that this job be run on the general partition (we also have high memory and GPU partitions) and `--qos=general` specifies the "general" quality of service. For most applications, we only vary `-c`, `--mem`, `--partition`, and `--qos=general`. 
+
+It's important that you request adequate, but not excessive resources for each task. Also, generally you must tell the software you are running how many CPUs it can use (and sometimes how much memory) or it may not use all that you have requested. You can read more about resource allocations on Xanadu [here](https://github.com/CBC-UCONN/CBC_Docs/wiki/Requesting-resource-allocations-in-SLURM) and at the link above. 
+
+After the SLURM header, we have the code to be run, as you will see in the sections below. 
+
+### Software modules
+
+You will note that in most of these scripts right after the SLURM header there is a `module load` command (e.g. `module load sratoolkit/2.11.3`). On Xanadu, we use a module system that allows us to have lots of software installed, often with conflicting dependencies, and to maintain functional older versions of software. In order to use one of these pieces of software, however, it must first be loaded. If you are working through this code on another system, you may need to install the software yourself, or modify the way it is made available (e.g. the version numbers). 
+
 ## 2. Downloading the data
-Besides our RNA-Seq reads, the only other data required for our annotation is the Arabidopsis thaliana reference genome (this does not include the databases installed with the various software used in this tutorial). While the reference genome may be found on the NCBI website, we will be using the un-annotated genome located on Xanadu.
+The first step in the tutorial is to obtain the data we need. There are three main pieces of data: a reference genome, RNA-seq data, and protein data from green plants. We'll get the genome and RNA-seq data now, and download the protein data when we use it later. 
 
-Now, we must download our RNA-Seq using the SRA-toolkit. We will be running this command as a slurm scheduler script. For more information, please visit the link provided. 
+Scripts to obtain the data can be found in the directory [`scripts/01_raw_data`](). There are three. One downloads our reference genome, the other two are approaches for getting the RNA-seq data. 
 
-It is important to know the layout of your SRA reads. For us, we are using paired-end reads. In future steps, we will want to be able to have two files, right-hand and left-hand, for each read which we can instruct our software to treat as paired. However, the SRA reads are compiled into a single file! To subvert this, we use the "--split-files" option of the sratoolkit to save each read in two separate files corresponding to the left-hand and right-hand reads. In here we will be accessing RNA seq data from WT Arabidopsis thaliana leaves, where total number of reads per library will be around 20M-22M, which is in acceptable range for RNA Seq and for annotation (around 15M).
+### Downloading the genome
+
+To get the genome, enter that directory and run the script `get_genome.sh`. By typing `sbatch get_genome.sh` on the command line. The body of the script (after the SLURM header) looks like this: 
+
+```bash
+OUTDIR=../../data/genome
+mkdir -p ${OUTDIR}
+
+cd ${OUTDIR}
+
+# Data: Arabidopsis thaliana TAIR10.1 assembly. 
+    # NCBI Accession: GCF_000001735.4
+
+# download genome
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/735/GCF_000001735.4_TAIR10.1/GCF_000001735.4_TAIR10.1_genomic.fna.gz
+
+# decompress
+gunzip GCF_000001735.4_TAIR10.1_genomic.fna.gz
+
+# strip off extra sequence name info after the space, e.g. 
+    # this:         >NC_003070.9 Arabidopsis thaliana chromosome 1 sequence 
+    # becomes this: >NC_003070.9
+sed 's/ .*//' GCF_000001735.4_TAIR10.1_genomic.fna >tmp.fna
+mv tmp.fna GCF_000001735.4_TAIR10.1_genomic.fna
+```
+
+We first create a variable and assign it the name of our desired output directory. We then create that directory and `cd` into it. Most scripts in this tutorial will begin by specifying variables for input and output directories (and sometimes other relevant files and directories). Not all will move into the output directory for the analysis, but direct output there instead. 
+
+The next steps are to download the genome from NCBI, decompress it and edit the sequence names, which have extraneous information (everything after the first space) that can trip up some software. You will note after this script completes, that there is now a new directory `data/genome` in the root of the tutorial repository containing our genome file (in this case with the suffix `.fna`). 
+
+The reference genome is in *FASTA* format. This format is plain text. Each sequence in the file begins with a header line, followed by the sequence:
 
 ```
-module load sratoolkit
-
-fastq-dump --split-files SRR6852085
-fastq-dump --split-files SRR6852086
+>NC_003070.9
+ccctaaaccctaaaccctaaaccctaaacctctGAATCCTTAATCCCTAAATCCCTAAATCTTTAAATCCTACATCCATG
+AATCCCTAAATACCTAAttccctaaacccgaaaccggTTTCTCTGGTTGAAAATCATTGTGtatataatgataattttat
+CGTTTTTATGTAATTGCTTATTGTTGTGtgtagattttttaaaaatatcatttgagGTCAATACAAATCCTATTTCTTGT
+GGTTTTCTTTCCTTCACTTAGCTATGGATGGTTTATCTTCATTTGTTATATTGGATACAAGCTTTGCTACGATCTACATT
+...
 ```
 
-The complete slurm script can be found in the 01_raw_data folder called [sra_download.sh](01_raw_data/sra_download.sh).
+### The RNA-seq data
+
+There are two scripts that can be used to obtain the RNA-seq data. If you are working on Xanadu, you can use `symlink_data.sh`. That script will create a new directory, `data/rnaseq` and create *symlinks*, or pointers that point to copies of the data already residing on the cluster. If you would rather download the data from NCBI, you can run `sra_download.sh`. The body of the script looks like this:
+
+```bash
+# RNA-seq from Arabidopsis leaf tissue
+    # bioproject: PRJNA438701
+        # biosample: SAMN08724106
+        # SRA runs:
+            # SRR6852085
+            # SRR6852086
+
+# load software
+module load sratoolkit/2.11.3
+
+# output directory, create if it doesn't exist
+OUTDIR=../../data/rnaseq
+mkdir -p $OUTDIR
+
+cd ${OUTDIR}
+
+fasterq-dump SRR6852085
+fasterq-dump SRR6852086
+```
+
+Here we are using `sratoolkit` and the command `fasterq-dump` to download two different sets of RNA-seq data derived from Arabidopsis leaf tissue. 
+
+The resulting data will be found in the newly created `data/rnaseq` directory. There will be four files of sequence data, each in *fastq* format:
+
+```
+SRR6852085_1.fastq
+SRR6852085_2.fastq
+SRR6852086_1.fastq
+SRR6852086_2.fastq
+```
+
+Our data are *paired-end*, which means that each molecule of cDNA in the sequence library is sequenced twice, once from each end. So our sequence data comes in pairs of files (`_1.fastq` and `_2.fastq`). The mate-pairs are kept in order, so if you do anything to disrupt the sequence ordering of these files that information will be scrambled. 
+
+*fastq* format is a bit like *fasta*, except that it contains more information. Each sequence record has four lines: a header line giving the sequence name (beginning with `@`), a nucleotide sequence, a comment line beginning with `+`, and a line containing ASCII encoded, phred-scaled base qualities. For more on base qualities see [here](https://www.drive5.com/usearch/manual/quality_score.html). 
+
+```
+@SRR6852085.1 1 length=150
+NGGCATGCAGACTTGTGAGGGGACGGAGACAATTCCGCTCANNGCNAGGTCACACACGTGTCTATTGTNAGGTGTGTACATNGGCAACGTGAAAGCGATAGTGAGGGNACAGTTTGGAATGTACAGCTGAACGGACATCACACGAAACCT
++SRR6852085.1 1 length=150
+#<AFFFJJJJJJJF-FF7FFAJAJJJJJJJJFFJJJJFFJ7##FJ#<JJFJJJJJJJA-AAJFAAAAA#AJF7F-FAJJJJ#JJ<AFJJA-<F<----7----7-J-#-777-7AAF-AAF-FAJ--7--7--7--7-7--7--------
+```
+
+You can run this script by entering the directory `scripts/01_raw_data/` and typing `sbatch sra_download.sh` on the command line. 
 
 Once the data is downloaded the folder will have the following files:
 ```
@@ -62,6 +173,7 @@ Once the data is downloaded the folder will have the following files:
 ├── SRR6852086_1.fastq
 └── SRR6852086_2.fastq
 ```
+
 You can check the number of reads in a fastq file using the following awk command:
 ```
 awk '{s++}END{print s/4}' SRR6852085_1.fastq
@@ -69,66 +181,24 @@ awk '{s++}END{print s/4}' SRR6852085_1.fastq
 As each fastq file contains 4 lines per each read, you will need to divide the total number of counts you get, by that number, which will give you the number of reads in the sample.  
 
 
-## 3. Quality control of reads  
+## 3. Identifying and Masking Repetitive Elements
 
-### Quality check of the reads using FASTQC   
-In here we will use the FASTQC package to check the quality of the reads.   
-```
-mkdir -p raw_fastqc_out
-fastqc --threads 2 -o ./raw_fastqc_out ../01_raw_data/*.fastq 
-```  
-complete slurm script [02a_raw_fastqc.sh](02_qc/02a_raw_fastqc.sh).
-FASTQC report information for SRR6852085_1.fastq can be found [here](FASTQC.md).
+The first step in annotating a genome is to identify repetitive elements. While this is a worthy goal in its own right, repetitive elements can also interfere with gene prediction, so by finding them first, we can mask them out and do a much better job finding genes. The process we are going to go through here can be thought of as a first pass at finding repetitive elements. The repeat models we generate will be ok, but highly redundant, and many will be fragmented. Getting a good candidate set of repetitive elements and understanding the distribution of each type throughout the genome requires more manual curation than we will undertake here. 
 
-We also want to trim our files to only take high-quality reads. We use the program sickle to trim our files. For information on sickle and its options, you may visit the paired-end reference section of the github provided prior. 
+There are two steps in this phase, first we're going to discover repetitive elements in our genome using `RepeatModeler`, and then we will use the resulting library of repeats to mask the genome. We'll use the masked genome for gene prediction in the next steps. 
 
-```
-module load sickle/1.33
+### Discovering repetitive elements with `RepeatModeler`
 
-sickle pe \
-        -t sanger \
-        -f ../01_raw_data/SRR6852085_1.fastq -r ../01_raw_data/SRR6852085_2.fastq \
-        -o trimmed_SRR6852085_1.fastq -p trimmed_SRR6852085_2.fastq -s trimmed_singles_6852085.fastq \
-        -q 30 -l 50
+`RepeatModeler` is a pipeline that ties together a few different pieces of software, but because repeats aren't a major focus of this analysis, we won't go into detail here. The main thrust is that we'll be identifying repetitive elements *de novo*, i.e. without using a library of elements from a related species. 
 
 
-sickle pe \
-        -t sanger \
-        -f ../01_raw_data/SRR6852086_1.fastq -r ../01_raw_data/SRR6852086_2.fastq \
-        -o trimmed_SRR6852086_1.fastq -p trimmed_SRR6852086_2.fastq -s trimmed_singles_6852086.fastq \
-        -q 30 -l 50
-```
 
-The complete slurm script is called [sickle_trimming.sh](02_qc/sickle_trimming.sh).
 
-The options for paired-end reads we use:
-```
-Usage: sickle  [options]
-Command:
-pe	paired-end sequence trimming
 
-Options:
-Paired-end separated reads
---------------------------
--f, --pe-file1, Input paired-end forward fastq file (Input files must have same number of records)
--r, --pe-file2, Input paired-end reverse fastq file
--o, --output-pe1, Output trimmed forward fastq file
--p, --output-pe2, Output trimmed reverse fastq file. Must use -s option.
-```
+A significant proportion of any eukaryotic genome is low complexity regions, often consisting of [repetitive elements](https://en.wikipedia.org/wiki/Repeated_sequence_(DNA)). Identifying these repeats is an important part of structural annotation of genomic sequence. A good fraction of repeats are associated with Transposable elements (TE) also known as mobile elements. TE are biologically important as they are proposed to have role in [genome evolution](https://pubmed.ncbi.nlm.nih.gov/15016989/) , [genomic rearrangement](https://pubmed.ncbi.nlm.nih.gov/15020798/) and modulation of gene expression. Repeats can negatively impact gene prediction, so we need to identify, annotate, and mask them.  There are two ways to mask sequence:
 
-This will result in trimmed reads:
-```
-02_qc/
-├── trimmed_singles_6852085.fastq
-├── trimmed_singles_6852086.fastq
-├── trimmed_SRR6852085_1.fastq
-├── trimmed_SRR6852085_2.fastq
-├── trimmed_SRR6852086_1.fastq
-└── trimmed_SRR6852086_2.fastq
-```
 
-## 4. Identifying Regions of Genomic Repetition with RepeatModeler
-A significant proportion of any eukaryotic genome is low complexity regions, often consisting of [repetitive elements](https://en.wikipedia.org/wiki/Repeated_sequence_(DNA)). Marking the presence of these repeats is an important part of structural annotation of genomic sequence. A good fraction of these repeats are associated with Transposable elements (TE) also known as mobile elements. TE are biologically important as they are proposed to have role in [genome evolution](https://pubmed.ncbi.nlm.nih.gov/15016989/) , [genomic rearrangement](https://pubmed.ncbi.nlm.nih.gov/15020798/) and modulation of gene expression. On the flip side, repeats can negatively affect the alignment when present flanking a genomic-region of interest. As part of genome annotation process we have to identify and annotate these repeats in our genome.  As these repeats can negatively affect gene predictions and evolutionary studies it demands that we mask them.  The masking of a sequence in genome is of 2 types, 
+
 
 (1) **Hard-Masking** where the the sequence is replaced by Ns.  Example the repeat sequence TGCAAATCGCA (terminal inverted repeat sequence  of Class 2 TE's) is hard masked in the sequence below
 
@@ -138,7 +208,10 @@ A significant proportion of any eukaryotic genome is low complexity regions, oft
 
 `CTGTGCAAATCGCAGTTA -> CTGtgcaaatcgcagTTA `
 
-It is fairly obvious that hard masking or removal of repeats is loss of sequence information as compared to soft masking and hence later is the preferred mode of masking a genome in an annotation process. The masking is a 2 fold process, one identification of repeats and secondly masking them.
+For our downstream software, softmasking is preferable. It will let annotators know that a given sequence is repetitive, so that it will be ignored in initial gene-finding, but retaining the sequence allows nearby genic sequence to be extended into it if necessary.
+
+Getting good annotations of repetitive elements requires a fair bit of manual curation of repeat element models. 
+
 Software used in identification of repeats can be categorised as extrensic and intrinsic tools.
 
 **Extrinsic tools**, e.g. [RepeatMasker](https://www.repeatmasker.org/), uses the repeat sequence (from a closely related species) listed in Repbase (a repeat database) and annotate there presence in our assembled genome.
@@ -409,6 +482,67 @@ Summary of the inital assembly assesment using BUSCO:
         --------------------------------------------------
 ```   
 
+
+
+
+
+## 3. Quality control of reads  
+
+### Quality check of the reads using FASTQC   
+In here we will use the FASTQC package to check the quality of the reads.   
+```
+mkdir -p raw_fastqc_out
+fastqc --threads 2 -o ./raw_fastqc_out ../01_raw_data/*.fastq 
+```  
+complete slurm script [02a_raw_fastqc.sh](02_qc/02a_raw_fastqc.sh).
+FASTQC report information for SRR6852085_1.fastq can be found [here](FASTQC.md).
+
+We also want to trim our files to only take high-quality reads. We use the program sickle to trim our files. For information on sickle and its options, you may visit the paired-end reference section of the github provided prior. 
+
+```
+module load sickle/1.33
+
+sickle pe \
+        -t sanger \
+        -f ../01_raw_data/SRR6852085_1.fastq -r ../01_raw_data/SRR6852085_2.fastq \
+        -o trimmed_SRR6852085_1.fastq -p trimmed_SRR6852085_2.fastq -s trimmed_singles_6852085.fastq \
+        -q 30 -l 50
+
+
+sickle pe \
+        -t sanger \
+        -f ../01_raw_data/SRR6852086_1.fastq -r ../01_raw_data/SRR6852086_2.fastq \
+        -o trimmed_SRR6852086_1.fastq -p trimmed_SRR6852086_2.fastq -s trimmed_singles_6852086.fastq \
+        -q 30 -l 50
+```
+
+The complete slurm script is called [sickle_trimming.sh](02_qc/sickle_trimming.sh).
+
+The options for paired-end reads we use:
+```
+Usage: sickle  [options]
+Command:
+pe	paired-end sequence trimming
+
+Options:
+Paired-end separated reads
+--------------------------
+-f, --pe-file1, Input paired-end forward fastq file (Input files must have same number of records)
+-r, --pe-file2, Input paired-end reverse fastq file
+-o, --output-pe1, Output trimmed forward fastq file
+-p, --output-pe2, Output trimmed reverse fastq file. Must use -s option.
+```
+
+This will result in trimmed reads:
+```
+02_qc/
+├── trimmed_singles_6852085.fastq
+├── trimmed_singles_6852086.fastq
+├── trimmed_SRR6852085_1.fastq
+├── trimmed_SRR6852085_2.fastq
+├── trimmed_SRR6852086_1.fastq
+└── trimmed_SRR6852086_2.fastq
+```
 
 
 
