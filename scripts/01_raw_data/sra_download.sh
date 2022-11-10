@@ -19,23 +19,41 @@ date
     # script in this directory to symlink the data instead
 
 # data
-# RNA-seq from Arabidopsis leaf tissue
+# Illumina paired-end RNA-seq from Arabidopsis leaf tissue
     # bioproject: PRJNA438701
         # biosample: SAMN08724106
         # SRA runs:
             # SRR6852085
             # SRR6852086
 
+# Oxford nanopore long read cDNA
+    # bioproject: PRJNA594286 
+        # biosamples: SAMN13510394,SAMN13510392,SAMN13510391
+        # SRA runs:
+            # SRR10611193
+            # SRR10611194
+            # SRR10611195
+
 # load software
 module load sratoolkit/2.11.3
 
 # output directory, create if it doesn't exist
 OUTDIR=../../data/rnaseq
-mkdir -p $OUTDIR
+mkdir -p ${OUTDIR}
 
 cd ${OUTDIR}
 
 fasterq-dump SRR6852085
 fasterq-dump SRR6852086
+
+# nanopore outdir
+NANODIR=../nanopore
+mkdir -p ${NANODIR}
+
+cd ${NANODIR}
+
+fasterq-dump SRR10611193
+fasterq-dump SRR10611194
+fasterq-dump SRR10611195
 
 date

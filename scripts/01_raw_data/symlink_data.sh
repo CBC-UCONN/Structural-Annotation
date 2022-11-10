@@ -39,3 +39,28 @@ for f in ${fpath}*; do
         echo `basename ${f}`
         ln -s ${f} `basename ${f}`
 done
+
+
+
+# Oxford nanopore long read cDNA
+    # bioproject: PRJNA594286 
+        # biosamples: SAMN13510394,SAMN13510392,SAMN13510391
+        # SRA runs:
+            # SRR10611193
+            # SRR10611194
+            # SRR10611195
+
+# output directory, create if it doesn't exist
+OUTDIR=../../data/nanopore
+mkdir -p $OUTDIR
+
+cd ${OUTDIR}
+
+# symlink data from fpath
+fpath="/core/cbc/tutorials/rawdata/Structural_Annotation/v1/nanopore/"
+
+for f in ${fpath}*; do
+        echo $f
+        echo `basename ${f}`
+        ln -s ${f} `basename ${f}`
+done

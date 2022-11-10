@@ -33,3 +33,9 @@ gunzip GCF_000001735.4_TAIR10.1_genomic.fna.gz
     # becomes this: >NC_003070.9
 sed 's/ .*//' GCF_000001735.4_TAIR10.1_genomic.fna >tmp.fna
 mv tmp.fna GCF_000001735.4_TAIR10.1_genomic.fna
+
+# download the annotation (for comparison)
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/735/GCF_000001735.4_TAIR10.1/GCF_000001735.4_TAIR10.1_genomic.gff.gz
+
+# decompress
+gunzip GCF_000001735.4_TAIR10.1_genomic.gff.gz
