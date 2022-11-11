@@ -36,7 +36,7 @@ jid15=$( sbatch --parsable --dependency=afterok:$jid12 04_EnTAP_monoexonics.sh )
 
 # braker proteins, start when repeat masking is done
 cd ../08_braker_proteins
-jid16=$( sbatch --parsable --dependency=afterok:$jid4 01_getproteins.sh )
+jid16=$( sbatch --parsable --dependency=afterok:$jid6 01_getproteins.sh )
 jid17=$( sbatch --parsable --dependency=afterok:$jid16 02_braker_proteins.sh )
 
 cd ../09_postprocess
