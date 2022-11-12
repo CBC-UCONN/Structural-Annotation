@@ -47,7 +47,7 @@ jid21=$( sbatch --parsable --dependency=afterok:$jid18 04_EnTAP_monoexonics.sh )
 
 # TSEBRA, start when braker rnaseq and braker proteins are done
 cd ../10_TSEBRA
-jid22=$( sbatch --parsable --dependency=afterok:$jid10,$jid16 01_TSEBRA.sh )
+jid22=$( sbatch --parsable --dependency=afterok:$jid10,$jid17 01_TSEBRA.sh )
 
 cd ../11_postprocess
 jid23=$( sbatch --parsable --dependency=afterok:$jid22 01_gfacs_all.sh )
