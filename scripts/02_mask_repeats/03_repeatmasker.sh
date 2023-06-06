@@ -18,12 +18,11 @@ date
 module load RepeatMasker/4.1.2
 
 # set variables
-REPLIB=/core/cbc/tutorials/workshopdirs/Structural-Annotation-Version3/results/02_mask_repeats/athaliana_db-families.fa
+REPLIB=../../results/02_mask_repeats/athaliana_db-families.fa
 OUTDIR=../../results/02_mask_repeats/repeatmasker
     mkdir -p ${OUTDIR}
-    cd ${OUTDIR}
 
-GENOME=/core/cbc/tutorials/workshopdirs/Structural-Annotation-Version3/data/genome/GCF_000001735.4_TAIR10.1_genomic.fna
+GENOME=../../data/genome/GCF_000001735.4_TAIR10.1_genomic.fna
 
 RepeatMasker -dir repeatmasker_out -pa 8 -lib ${REPLIB} -gff -a -noisy -xsmall ${GENOME}
 
