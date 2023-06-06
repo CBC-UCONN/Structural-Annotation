@@ -1,0 +1,2 @@
+2023-05-26 13:45:11	-	adoring_ekeblad	-	c15db1324a4a5e7cbd5b753a457f4d3c4600f6c9	6e2b4859-4b6c-42c8-835a-ed9985ddf7ae	nextflow run -hub gitlab PlantGenomicsLab/easel -profile singularity,xanadu -params-file params.yaml
+2023-05-29 05:53:38	-	dreamy_leavitt	-	c15db1324a4a5e7cbd5b753a457f4d3c4600f6c9	b8ee6227-e332-4451-9670-dc4bc642c95a	nextflow run -hub gitlab PlantGenomicsLab/easel -profile singularity,xanadu -params-file params.yaml
