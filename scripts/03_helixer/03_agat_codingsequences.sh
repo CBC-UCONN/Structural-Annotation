@@ -22,7 +22,7 @@ mkdir -p ${OUTDIR}
 cd ${OUTDIR}
 
 singularity exec /isg/shared/databases/nfx_singularity_cache/depot.galaxyproject.org-singularity-agat-1.0.0--pl5321hdfd78af_0.img agat_sp_keep_longest_isoform.pl \
-	--gff ../../Arabidopsis_thaliana.gff3 \ \
+	--gff ../../Arabidopsis_thaliana.gff3 \
 	-o helixer_longest_isoform.gtf 
 
 

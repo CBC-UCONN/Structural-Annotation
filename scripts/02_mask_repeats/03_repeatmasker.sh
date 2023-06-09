@@ -24,6 +24,6 @@ OUTDIR=../../results/02_mask_repeats/repeatmasker
 
 GENOME=../../data/genome/GCF_000001735.4_TAIR10.1_genomic.fna
 
-RepeatMasker -dir repeatmasker_out -pa 8 -lib ${REPLIB} -gff -a -noisy -xsmall ${GENOME}
+RepeatMasker -dir ${OUTDIR}/repeatmasker_out -pa 8 -lib ${REPLIB} -gff -a -noisy -xsmall ${GENOME}
 
 date

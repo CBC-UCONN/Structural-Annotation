@@ -17,7 +17,7 @@ date
 module load gffcompare/0.10.4
 
 # output directory
-OUTDIR=../../results/06_gffcompare
+OUTDIR=../../results/06_gffcompare_2
     mkdir -p ${OUTDIR}
 
 # files
