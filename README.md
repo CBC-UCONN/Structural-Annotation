@@ -804,7 +804,7 @@ Totals
         
  ```
 
-Method 3: EASEL
+## 8. EASEL Pipeline
 
 EASEL (Efficient, Accurate, Scalable Eukaryotic modeLs) is a genome annotation pipeline that utilizes machine learning, RNA folding, and functional annotations to enhance gene prediction accuracy. is a nextflow pipeline that annotates a genome with RNA-seq reads as evidence. 
 
@@ -815,7 +815,7 @@ To run EASEL on xanadu we must first pull the container, and then provide it wit
 Then we ran the following script:
 
 
-## 19. GFFCompare   
+## 9. Compare Evaluations   
 GFFCompare can be used to compare, merge, annotate and estimate accuracy of one or more GFF files when compared with a reference annotation. Here we run GFFCompare with the three annotation files we generated through this tutorial, and the "truth" that we pulled in the beginning in the 01_raw_data directory. 
 
 Navigate to `06_gffcompare` and `sbatch 01_gffcompare.sh`:
