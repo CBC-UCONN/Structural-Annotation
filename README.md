@@ -565,9 +565,9 @@ Let's look at the `stats.txt` (`less stats.txt`)
 
 Here we can look at the mono/multi exonic gene ratio:
 
-"Number of single exon gene" / ("Number of gene" - "Number of single exon gene")
+"Number of single exon gene" / "Number of genes"
 
-5067/22015=0.230
+5067/27082=0.187
 
 
 Next we extract a single transcript per gene model and then extract the coding sequences in the script `03_agat_codingsequences.sh` in order to evaluate them with BUSCO and EnTAP. This can be done with `agat_sp_keep_longest_isoform.pl` and `agat_sp_extract_sequences.pl`.
@@ -766,8 +766,8 @@ To evaluate this genome we will follow the same steps we did with Helixer (agat,
 AGAT:
 
 Mono/Multi Ratio
-"Number of single exon gene" / ("Number of gene" - "Number of single exon gene")
-7132/23114=0.309
+"Number of single exon gene" / "Number of genes"
+7132/30246=0.236
 
 Busco:
 ```bash
