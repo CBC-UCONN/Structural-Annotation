@@ -18,8 +18,6 @@ date
 ##################################
 # this time we'll use qualimap
 
-# load software--------------------------------------------------------------------------
-module load qualimap/2.2.1
 
 
 # input, output directories--------------------------------------------------------------
@@ -28,20 +26,30 @@ INDIR=../../results/alignment_exercise/alignments
 OUTDIR=../../results/alignment_exercise/qualimap_reports/helixer
 mkdir -p $OUTDIR
 
+#get gff3 in gtf format
+#module load singularity
+#GFF=../../results/03_helixer/Arabidopsis_thaliana.gff3
+
+
+#singularity exec /isg/shared/databases/nfx_singularity_cache/depot.galaxyproject.org-singularity-agat-1.0.0--pl5321hdfd78af_0.img agat_convert_sp_gff2gtf.pl --gff $GFF -o ../../results/03_helixer/Arabidopsis_thaliana.gtf
+
 # gtf annotation is required here
-GFF=../../results/03_helixer/Arabidopsis_thaliana.gff3
+GTF=../../results/03_helixer/Arabidopsis_thaliana.gtf
+
+# load software--------------------------------------------------------------------------
+module load qualimap/2.2.1
 
 qualimap \
     rnaseq \
     -bam $INDIR/SRR6852085.bam \
-    -gtf $GFF \
+    -gtf $GTF \
     -outdir $OUTDIR/SRR6852085 \
     --java-mem-size=10G  
 
 qualimap \
     rnaseq \
     -bam $INDIR/SRR6852086.bam \
-    -gtf $GFF \
+    -gtf $GTF \
     -outdir $OUTDIR/SRR6852086 \
     --java-mem-size=10G  
 

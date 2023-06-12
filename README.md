@@ -623,13 +623,14 @@ Let's take a look at the output (`/results/03_helixer/busco/short_summary.specif
 ```bash
  ***** Results: *****
 
-        C:99.5%[S:98.8%,D:0.7%],F:0.2%,M:0.3%,n:425        
-        423     Complete BUSCOs (C)                        
-        420     Complete and single-copy BUSCOs (S)        
+        C:99.1%[S:98.4%,D:0.7%],F:0.2%,M:0.7%,n:425        
+        421     Complete BUSCOs (C)                        
+        418     Complete and single-copy BUSCOs (S)        
         3       Complete and duplicated BUSCOs (D)         
         1       Fragmented BUSCOs (F)                      
-        1       Missing BUSCOs (M)                         
-        425     Total BUSCO groups searched                
+        3       Missing BUSCOs (M)                         
+        425     Total BUSCO groups searched
+
 
 ```
 
@@ -807,7 +808,7 @@ Method 3: EASEL
 
 EASEL (Efficient, Accurate, Scalable Eukaryotic modeLs) is a genome annotation pipeline that utilizes machine learning, RNA folding, and functional annotations to enhance gene prediction accuracy. is a nextflow pipeline that annotates a genome with RNA-seq reads as evidence. 
 
-More about methods and the workflows may be found on the EASEL website[https://gitlab.com/PlantGenomicsLab/easel-workshop-pag30/-/tree/master/].
+More about methods and the workflows may be found on the EASEL website[https://gitlab.com/PlantGenomicsLab/easel].
 
 To run EASEL on xanadu we must first pull the container, and then provide it with a set of paramaters. The params.yaml file:
 

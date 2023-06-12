@@ -7,7 +7,7 @@
 #SBATCH --qos=general
 #SBATCH --mail-type=ALL
 #SBATCH --mem=50G
-#SBATCH --mail-user=mia.nahom@uconn.edu
+#SBATCH --mail-user=your.email@uconn.edu
 #SBATCH -o %x_%j.out
 #SBATCH -e %x_%j.err
 
